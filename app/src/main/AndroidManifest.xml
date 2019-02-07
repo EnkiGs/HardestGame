@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="iut.projet.hardestgame">
-
+    <uses-permission android:name="android.permission.INTERNET" />7
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,16 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".controllers.SettingsActivity" />
         <activity
-            android:name=".GameActivity">
+            android:name=".controllers.GameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".controllers.MainActivity" />
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="userLandscape">
+            android:name=".controllers.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,10 +29,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LevelsActivity">
+            android:name=".controllers.LevelsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".controllers.MainActivity" />
         </activity>
 
         <meta-data

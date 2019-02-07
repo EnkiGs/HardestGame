@@ -6,5 +6,6 @@
     <string name="LevelsScreen">Ici seront les levels</string>
     <string name="gameTest">Ici sera le jeu</string>
     <string name="conf_button_desc">Configuration</string>
+    <string name="button_scores">Scores</string>
     <string name="parametres">Parametres</string>
 </resources>
