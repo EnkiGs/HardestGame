@@ -11,15 +11,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".controllers.SettingsActivity" />
         <activity
-            android:name=".GameActivity">
+            android:name=".controllers.GameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".controllers.MainActivity" />
         </activity>
         <activity
-            android:name=".MainActivity">
+            android:name=".controllers.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,10 +27,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LevelsActivity">
+            android:name=".controllers.LevelsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".controllers.MainActivity" />
         </activity>
 
         <meta-data

@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivity">
+    tools:context=".controllers.GameActivity">
 
-    <TextView
-        android:id="@+id/GameTextView"
-        android:layout_width="336dp"
-        android:layout_height="171dp"
-        android:gravity="center"
-        android:text="@string/gameTest"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/gameA"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
+
 </android.support.constraint.ConstraintLayout>
+
+
+
+
+
+

@@ -1,9 +1,11 @@
-package iut.projet.hardestgame;
+package iut.projet.hardestgame.controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import iut.projet.hardestgame.R;
 
 public class MainActivity extends AppCompatActivity {
 
