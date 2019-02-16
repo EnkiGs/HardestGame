@@ -10,12 +10,13 @@ import java.io.IOException;
 import iut.projet.hardestgame.R;
 
 public class SongPlayer {
+
     private MediaPlayer player;
 
 
-    public SongPlayer(Context context) throws IOException {
+    public SongPlayer(Context context, int res) throws IOException {
         player = new MediaPlayer();
-        Uri myUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.giletsjaunes);
+        Uri myUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + res);
         player.setDataSource(context, myUri);
         player.prepare();
     }

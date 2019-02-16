@@ -6,50 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-public class GameView extends View {
-    private float currX = 100;
+public class GameView{
 
-    private float currY = 100;
-
-
-    private int ballColor = Color.GREEN;
-
-    public int getBallColor() {
-        return ballColor;
-    }
-
-    public void setBallColor(int ballColor) {
-        this.ballColor = ballColor;
-    }
-
-    public float getCurrX() {
-        return currX;
-    }
-
-    public float getCurrY() {
-        return currY;
-    }
-
-    public void setCurrX(float currX) {
-        this.currX = currX;
-    }
-
-    public void setCurrY(float currY) {
-        this.currY = currY;
-    }
-
-    public GameView(Context context) {
-        super(context);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        Paint paint = new Paint();
-
-        paint.setColor(this.getBallColor());
-
-        canvas.drawCircle(currX, currY, 35, paint);
-    }
 }
