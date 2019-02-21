@@ -5,14 +5,31 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class GameView extends View {
     private float currX = 100;
 
     private float currY = 100;
-
+    private Paint paint;
 
     private int ballColor = Color.GREEN;
+
+    public GameView(Context context) {
+        super(context);
+        paint = new Paint();
+        setLayoutParams(new LinearLayout.LayoutParams(300, 500));
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        paint.setColor(this.getBallColor());
+        canvas.drawCircle(currX, currY, 35, paint);
+    }
+
 
     public int getBallColor() {
         return ballColor;
@@ -36,20 +53,5 @@ public class GameView extends View {
 
     public void setCurrY(float currY) {
         this.currY = currY;
-    }
-
-    public GameView(Context context) {
-        super(context);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        Paint paint = new Paint();
-
-        paint.setColor(this.getBallColor());
-
-        canvas.drawCircle(currX, currY, 35, paint);
     }
 }
