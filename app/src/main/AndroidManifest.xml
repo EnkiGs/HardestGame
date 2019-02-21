@@ -13,7 +13,8 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".controllers.SettingsActivity" />
         <activity
-            android:name=".controllers.GameActivity">
+            android:name=".controllers.GameActivity"
+            android:screenOrientation="userLandscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />
