@@ -15,30 +15,6 @@
         android:layout_gravity="center"
         android:text="Retour" />
 
-    <TextView
-        android:id="@+id/textview_sensor1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/textview_sensor2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/textview_sensor3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="COUCOU"
-        android:textSize="24sp" />
-
 </LinearLayout>
 
 

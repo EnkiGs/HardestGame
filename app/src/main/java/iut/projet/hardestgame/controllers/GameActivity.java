@@ -1,73 +1,43 @@
 package iut.projet.hardestgame.controllers;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.LayoutDirection;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
-import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.io.IOException;
 
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.models.SongPlayer;
-import iut.projet.hardestgame.views.GameView;
 
-public class GameActivity extends AppCompatActivity{
+public class GameActivity extends AppCompatActivity implements SensorEventListener{
 
     private GameLoop game;
     SongPlayer songPlayer;
-    GameView gameView;
+    private SensorManager sensorManager;
+    private Sensor mAccelerator;
+    private float mSensorX = 0;
+    private float mSensorY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        game = new GameLoop();
+        game = new GameLoop(this);
+        //setContentView(game.screen);
+        setContentView(R.layout.activity_game);
         game.initGame(this);
-        setContentView(game.screen);
-        //LinearLayout rootLayout = findViewById(R.id.gameA);
-
-        /*gameView = new GameView(this){
-            @Override
-            public boolean performClick() {
-                return super.performClick();
-            }
-        };*/
-
-       /* gameView.setMinimumWidth(500);
-        gameView.setMinimumHeight(800);
-*/
-
-
-        /*View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                gameView.setCurrX(motionEvent.getX());
-                gameView.setCurrY(motionEvent.getY());
-
-                gameView.setBallColor(Color.BLUE);
-                gameView.performClick();
-                gameView.invalidate();
-
-                return true;
-            }
-        };*/
-
-
-        //gameView.setOnTouchListener(onTouchListener);
-        //rootLayout.addView(gameView);
+        LinearLayout rootLayout = findViewById(R.id.gameA);
+        rootLayout.addView(game.screen);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
 
         try {
             songPlayer = new SongPlayer(getBaseContext());
@@ -92,6 +62,46 @@ public class GameActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         game.running = false;
+        sensorManager.unregisterListener(this);
         super.onDestroy();
+    }
+
+
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        switch (((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getRotation()) {
+            case Surface.ROTATION_0:
+                mSensorX = event.values[0];
+                mSensorY = event.values[1];
+                break;
+            case Surface.ROTATION_90:
+                mSensorX = -event.values[1];
+                mSensorY = event.values[0];
+                break;
+            case Surface.ROTATION_180:
+                mSensorX = -event.values[0];
+                mSensorY = -event.values[1];
+                break;
+            case Surface.ROTATION_270:
+                mSensorX = event.values[1];
+                mSensorY = -event.values[0];
+                break;
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public float getmSensorX() {
+        return mSensorX;
+    }
+
+    public float getmSensorY() {
+        return mSensorY;
     }
 }
