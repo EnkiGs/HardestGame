@@ -48,9 +48,10 @@ public class GameLoop extends Thread {
         this.context = context;
         animate = true;
         running = true;
-        this.screen = new GameView(context, this);
+        //this.screen = new GameView(context, this);
         x = screen.getCurrX();
         y = screen.getCurrY();
+        start();
     }
 
     /** la boucle de jeu */
@@ -61,9 +62,16 @@ public class GameLoop extends Thread {
         long sleepCorrected; // sleeptime corrigé
         while (this.running) {
             startTime = System.currentTimeMillis();
-            this.processEvents();
+            /*this.processEvents();
             this.update();
-            this.render();
+            this.render();*/
+            acti.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    screen.update();
+                }
+            });
+
             elapsedTime = System.currentTimeMillis() - startTime;
             sleepCorrected = sleepTime - elapsedTime;
             // si jamais sleepCorrected<0 alors faire une pause de 1 ms
@@ -78,9 +86,6 @@ public class GameLoop extends Thread {
             fps = (int) (1000/(System.currentTimeMillis() - startTime));
             sleepTime = 1/fps*1000;
         }
-
-
-
     }
 
     /** Dessiner les composant du jeu sur le buffer de l'écran*/
@@ -89,7 +94,8 @@ public class GameLoop extends Thread {
         screen.setCurrY(y + 1*acti.getmSensorY());
 
         screen.setBallColor(Color.RED);
-        screen.invalidate();
+        screen.update();
+        //screen.invalidate();
     }
 
     /** Mise à jour des composants du jeu

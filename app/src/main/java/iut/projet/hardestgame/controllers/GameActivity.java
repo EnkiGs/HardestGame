@@ -16,10 +16,12 @@ import java.io.IOException;
 
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.models.SongPlayer;
+import iut.projet.hardestgame.views.GameView;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener{
 
-    private GameLoop game;
+    //private GameLoop game;
+    private GameView game;
     SongPlayer songPlayer;
     private SensorManager sensorManager;
     private Sensor mAccelerator;
@@ -29,12 +31,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        game = new GameLoop(this);
+        //game = new GameLoop(this);
         //setContentView(game.screen);
         setContentView(R.layout.activity_game);
-        game.initGame(this);
+        //game.initGame(this);
         LinearLayout rootLayout = findViewById(R.id.gameA);
-        rootLayout.addView(game.screen);
+        game = new GameView(this,this);
+        rootLayout.addView(game);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
@@ -61,7 +64,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onDestroy() {
-        game.running = false;
+        //game.running = false;
         sensorManager.unregisterListener(this);
         super.onDestroy();
     }
