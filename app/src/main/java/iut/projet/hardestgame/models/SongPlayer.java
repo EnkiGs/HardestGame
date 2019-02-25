@@ -23,7 +23,7 @@ public class SongPlayer {
 
     public SongPlayer(String url) throws IOException {
         player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        //player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setDataSource(url);
         player.prepare();
     }

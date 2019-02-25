@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gameA"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".controllers.GameActivity">
-    <LinearLayout
-        android:id="@+id/gameActivityView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp"-->
 
-        <TextView
-            android:id="@+id/nbDeaths"
-            android:layout_width="80dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/nbDeaths"
+        android:layout_width="80dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ballDisplay"
+        android:layout_width="427dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
 
+</LinearLayout>
 
 
 
