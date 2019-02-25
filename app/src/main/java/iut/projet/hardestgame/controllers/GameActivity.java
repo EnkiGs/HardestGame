@@ -2,7 +2,9 @@ package iut.projet.hardestgame.controllers;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.LayoutDirection;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -31,6 +34,8 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.models.SongPlayer;
@@ -38,13 +43,28 @@ import iut.projet.hardestgame.views.GameView;
 
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
 
+    private int screenWidth;
+    private int screenHeight;
+    private ImageView arrowUp;
+    private ImageView arrowDown;
+    private ImageView arrowRight;
+    private ImageView arrowLeft;
+    private float arrowUpX;
+    private float arrowUpY;
+    private float arrowDownX;
+    private float arrowDownY;
+    private float arrowRoghtX;
+    private float arrowRightY;
+    private float arrowLeftX;
+    private float arrowLeftY;
+    private Handler handler = new Handler();
+    private Timer timer = new Timer();
     private View myView;
     private TextView viewDeaths;
     SongPlayer songPlayer = MainActivity.getSongPlayer();
     private static int nbDeaths = 0;
     private SensorManager sensorManager;
     private Sensor mAccelerator;
-
     GameView gameView;
 
 
@@ -54,8 +74,39 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         LinearLayout layout = (LinearLayout) findViewById(R.id.ballDisplay);
 
+        arrowUp = (ImageView) findViewById(R.id.arrowUp);
+        arrowDown = (ImageView) findViewById(R.id.arrowDown);
+        arrowRight = (ImageView) findViewById(R.id.arrowRight);
+        arrowLeft = (ImageView) findViewById(R.id.arrowLeft);
+
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenHeight = size.y;
+        screenWidth = size.x;
+
+        arrowUp.setX(-80.0f);
+        arrowUp.setY(+80.0f);
+        arrowDown.setX(-80.0f);
+        arrowDown.setY(screenHeight + 80.0f);
+        arrowRight.setY(screenHeight + 80.0f);
+        arrowRight.setX(screenWidth + 80.0f);
+        arrowLeft.setY(-80.0f);
+        arrowLeft.setY(-80.0f);
 
 
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable (){
+                    @Override
+                    public void run(){
+                        changePosition();
+                    }
+                });
+            }
+        }, 0,20);
         myView = findViewById(R.id.gameA);
         myView.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -123,7 +174,39 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+    public void changePosition(){
+        arrowUpY -= 10;
+        if(arrowUp.getY() + arrowUp.getHeight() < 0){
+            arrowUpX = (float) Math.floor(Math.random()*(screenWidth - arrowUp.getWidth()));
+            arrowUpY = screenHeight + 100.0f;
+        }
+        arrowUp.setX(arrowUpX);
+        arrowUp.setY(arrowUpY);
 
+        arrowDownY += 10;
+        if(arrowDown.getY() > screenHeight){
+            arrowDownX = (float)Math.floor(Math.random()*(screenWidth - arrowDown.getWidth()));
+            arrowDownY = -100.0f;
+        }
+        arrowDown.setX(arrowDownX);
+        arrowDown.setY(arrowDownY);
+
+        arrowRoghtX += 10;
+        if(arrowRight.getX()> screenWidth){
+            arrowRoghtX = -100.0f;
+            arrowRightY = (float)Math.floor(Math.random() * (screenHeight - arrowRight.getHeight()));
+        }
+        arrowRight.setY(arrowRightY);
+        arrowRight.setX(arrowRoghtX);
+
+        arrowLeftX -= 10;
+        if(arrowLeft.getX() + arrowLeft.getWidth() > 0){
+            arrowLeftX = screenWidth + 100.0f;
+            arrowLeftY = (float)Math.floor(Math.random() * screenHeight - arrowLeft.getHeight());
+        }
+        arrowLeft.setX(arrowLeftX);
+        arrowLeft.setY(arrowLeftY);
+    }
     @Override
     protected void onResume() {
         super.onResume();
