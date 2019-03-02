@@ -7,4 +7,8 @@
     <string name="gameTest">Ici sera le jeu</string>
     <string name="conf_button_desc">Configuration</string>
     <string name="parametres">Parametres</string>
+    <string name="playername">Name</string>
+    <string name="ready">I\'m ready</string>
+    <string name="level_1">LEVEL 1</string>
+
 </resources>

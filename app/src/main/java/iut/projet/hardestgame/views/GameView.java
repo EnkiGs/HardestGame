@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import iut.projet.hardestgame.controllers.GameActivity;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Circle;

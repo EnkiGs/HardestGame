@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="iut.projet.hardestgame">
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
+    <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,24 +18,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".controllers.SettingsActivity" />
-        <activity
-            android:name=".controllers.GameActivity"
-            android:screenOrientation="landscape">
+        <activity android:name=".controllers.PlayerCaracsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />
         </activity>
-        <activity
-            android:name=".controllers.MainActivity">
+        <activity android:name=".controllers.SettingsActivity" />
+        <activity android:name=".controllers.GameActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".controllers.PlayerCaracsActivity" />
+        </activity>
+        <activity android:name=".controllers.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".controllers.LevelsActivity">
+        <activity android:name=".controllers.LevelsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />
@@ -37,6 +46,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>
