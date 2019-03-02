@@ -1,6 +1,7 @@
 package iut.projet.hardestgame.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -36,7 +38,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         //game.initGame(this);
         LinearLayout rootLayout = findViewById(R.id.gameA);
-        game = new GameView(this,this);
+        game = new GameView(this, this);
         rootLayout.addView(game);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -48,7 +50,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        ((Button) findViewById(R.id.buttonRetour)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -74,7 +82,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
         switch (((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getRotation()) {
             case Surface.ROTATION_0:
                 mSensorX = event.values[0];
@@ -93,7 +100,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 mSensorY = -event.values[0];
                 break;
         }
-
     }
 
     @Override

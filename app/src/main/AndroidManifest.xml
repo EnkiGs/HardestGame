@@ -14,7 +14,7 @@
         <activity android:name=".controllers.SettingsActivity" />
         <activity
             android:name=".controllers.GameActivity"
-            android:screenOrientation="userLandscape">
+            android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".controllers.MainActivity" />
