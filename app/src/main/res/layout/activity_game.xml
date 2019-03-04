@@ -14,51 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Retour" />
-    <!--    tools:layout_editor_absoluteX="8dp"
-    tools:layout_editor_absoluteY="8dp"-->
-
-    <TextView
-        android:id="@+id/nbDeaths"
-        android:layout_width="80dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/ballDisplay"
-        android:layout_width="427dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrowdown"
-            android:id="@+id/arrowDown"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrowup"
-            android:id="@+id/arrowUp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrowright"
-            android:id="@+id/arrowRight"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrowleft"
-            android:id="@+id/arrowLeft"/>
-    </LinearLayout>
 
 </LinearLayout>
-
 
 
 
