@@ -24,7 +24,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     //private GameLoop game;
     private GameView game;
-    SongPlayer songPlayer;
+    //public static SongPlayer songPlayer;
     private SensorManager sensorManager;
     private Sensor mAccelerator;
     private float mSensorX = 0;
@@ -43,10 +43,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
-
+        //MainActivity.getSongPlayer().stop();
         try {
-            songPlayer = new SongPlayer(getBaseContext());
-            //songPlayer.start();
+            MainActivity.getSongPlayer().putMusic(getBaseContext(), R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,13 +59,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        MainActivity.getSongPlayer().start();
     }
 
     @Override
     protected void onPause() {
+        MainActivity.getSongPlayer().stop();
         super.onPause();
     }
 
