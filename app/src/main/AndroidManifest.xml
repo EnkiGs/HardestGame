@@ -12,16 +12,16 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         android:debuggable="true">
-        <activity android:name=".controllers.SettingsActivity" />
+        <activity android:name=".Activities.SettingsActivity" />
         <activity
-            android:name=".controllers.GameActivity"
+            android:name=".Activities.GameActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
         <activity
-            android:name=".controllers.MainActivity">
+            android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,10 +29,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controllers.LevelsActivity">
+            android:name=".Activities.LevelsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".controllers.MainActivity" />
+                android:value=".Activities.MainActivity" />
         </activity>
 
         <meta-data

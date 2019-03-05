@@ -1,7 +1,7 @@
 package iut.projet.hardestgame.models;
 
 public class Circle extends Collisionable {
-    private float radius = 0;
+    private float radius;
 
     public Circle(float x, float y, float radius){
         this.x = x;

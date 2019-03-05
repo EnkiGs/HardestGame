@@ -1,8 +1,8 @@
 package iut.projet.hardestgame.models;
 
 public class Box extends Collisionable {
-    private float width = 0;
-    private float height = 0;
+    private float width;
+    private float height;
 
     public Box(float x, float y, float width, float height){
         this.x = x;

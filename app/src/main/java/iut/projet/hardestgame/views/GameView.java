@@ -8,11 +8,12 @@ import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import iut.projet.hardestgame.controllers.GameActivity;
+import iut.projet.hardestgame.Activities.GameActivity;
+import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Circle;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback, Runnable  {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
 
     private int width = 1000;
     private int height = 1000;
@@ -20,15 +21,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private float currX = 100;
     private float currY = 100;
     private Paint paint;
-    //private GameLoop game;
-    private GameActivity game;
     private SurfaceHolder surfaceHolder;
     private int screenWidth = 0;
     private int screenHeight = 0;
     private Canvas canvas = null;
     private int ballColor = Color.GREEN;
-    private Thread thread = null;
-    private boolean threadRunning = false;
     Paint backgroundPaint;
     Rect rect;
 
@@ -43,13 +40,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     Box b1;
     Box b2;
     Circle c;
-    public GameView(Context context, GameActivity ga/*, final GameLoop game*/) {
+
+
+    public GameView(Context context) {
         super(context);
         setFocusable(true);
         paint = new Paint();
         surfaceHolder = this.getHolder();
         surfaceHolder.addCallback(this);
-        game = ga;
         setZOrderOnTop(true);
 
         backgroundPaint = new Paint();
@@ -62,10 +60,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        //setWillNotDraw(false);
-        thread = new Thread(this);
-        thread.start();
-        threadRunning = true;
         screenHeight = getHeight();
         screenWidth = getWidth();
         right = screenWidth - margin;
@@ -78,64 +72,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        threadRunning = false;
-    }
+    public void surfaceDestroyed(SurfaceHolder holder) {}
 
 
-    @Override
-    public void run() {
-        while(threadRunning)
-        {
-            long startTime = System.currentTimeMillis();
-
-            update();
-
-            long endTime = System.currentTimeMillis();
-
-            long deltaTime = endTime - startTime;
-
-            if(deltaTime < 500)
-            {
-                try {
-                    Thread.sleep(40 - deltaTime);
-                }catch (InterruptedException ex)
-                {
-                    //Log.e(LOG_TAG, ex.getMessage());
-                }
-
-            }
-        }
-
-    }
-
-
-    public void update() {
+    public void update(float xSensor, float ySensor) {
         paint.setColor(this.getBallColor());
-        currX -= game.getmSensorX()*3;
-        currY += game.getmSensorY()*3;
+        currX -= xSensor*3;
+        currY += ySensor*3;
         c.setX(currX);
         c.setY(currY);
-        b1.setX(b1.getX()-game.getmSensorX()*2);
-        b1.setY(b1.getY()+game.getmSensorY()*2);
+        b1.setX(b1.getX()-xSensor*2);
+        b1.setY(b1.getY()+ySensor*2);
         if(b1.checkCollisions(b2)){
-            b1.setX(b1.getX()+game.getmSensorX()*2);
-            b1.setY(b1.getY()-game.getmSensorY()*2);
+            b1.setX(b1.getX()+xSensor*2);
+            b1.setY(b1.getY()-ySensor*2);
         }
 
         if(c.checkCollisions(b2)){
-            currX += game.getmSensorX()*3;
-            currY -= game.getmSensorY()*3;
+            currX += xSensor*3;
+            currY -= ySensor*3;
             c.setX(currX);
             c.setY(currY);
         }
 
 
 
-        // Only draw text on the specified rectangle area.
         canvas = surfaceHolder.lockCanvas();
 
-        // Draw the specify canvas background color.
         rect = new Rect(left, top, right, bottom);
         canvas.drawRect(rect, backgroundPaint);
 
@@ -148,10 +111,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         p2.setColor(Color.BLACK);
         canvas.drawRect(new Rect((int)b2.getX(),(int)b2.getY(),(int)(screenWidth-(screenWidth-(b2.getX()+b2.getWidth()))),(int)(screenHeight-(screenHeight-(b2.getY()+b2.getHeight())))),p2);
 
-        // Send message to main UI thread to update the drawing to the main view special area.
         surfaceHolder.unlockCanvasAndPost(canvas);
-        //invalidate();
     }
+
 
     public int getBallColor() {
         return ballColor;
