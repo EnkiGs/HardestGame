@@ -53,14 +53,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         paint = new Paint();
         surfaceHolder = this.getHolder();
         surfaceHolder.addCallback(this);
-        setZOrderOnTop(true);
+        //setZOrderOnTop(true);
 
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.WHITE);
 
         b1 = new Box(100, 100, 50, 50, BitmapFactory.decodeResource(context.getResources(), R.drawable.tile));
         b2 = new Box(500,300, 50, 50, BitmapFactory.decodeResource(context.getResources(), R.drawable.tile));
-        c = new Circle(currX, currY, radius);
+        c = new Circle(currX, currY, radius, BitmapFactory.decodeResource(context.getResources(), R.drawable.player));
 
         this.tabCol = tabCol;
     }

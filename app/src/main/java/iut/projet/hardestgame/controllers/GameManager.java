@@ -22,6 +22,7 @@ import iut.projet.hardestgame.Activities.GameActivity;
 import iut.projet.hardestgame.Activities.MainActivity;
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.models.Collisionable;
+import iut.projet.hardestgame.models.Player;
 import iut.projet.hardestgame.models.Tile;
 import iut.projet.hardestgame.views.GameView;
 
@@ -98,7 +99,7 @@ public class GameManager implements SensorEventListener {
                                 col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
                                 break;
                             case '2':
-                                col = new Player(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[1]);
+                                col = new Player((Collisionable.TILE_SIZE)*(j+(float)0.5),(Collisionable.TILE_SIZE)*(i+(float)0.5),(Collisionable.TILE_SIZE-50)/(float)2, bitmaps[1]);
                                 break;
                             case '3':
                                 col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
@@ -139,7 +140,6 @@ public class GameManager implements SensorEventListener {
         bitmaps[3] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
         bitmaps[4] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
         bitmaps[5] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
-
         return bitmaps;
     }
 
@@ -148,9 +148,48 @@ public class GameManager implements SensorEventListener {
         ga.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                updateColl();
                 gameView.update(mSensorX, mSensorY);
             }
         });
+    }
+
+    private void updateColl(){
+
+        for(Collisionable c : tab){
+            if(c==null)
+                continue;
+            switch(c.getClass().getSimpleName()){
+                case "Player":
+                    updatePlayer((Player)c);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void updatePlayer(Player c){
+        float oldX = c.getCenterX();
+        float oldY = c.getCenterY();
+        float currX = c.getCenterX()-mSensorX*3;
+        float currY = c.getCenterY()+mSensorY*3;
+        c.move(currX,currY);
+
+        for (Collisionable col: tab) {
+            if (col == null)
+                continue;
+            switch (col.getClass().getSimpleName()) {
+                case "Tile":
+                    if (col.checkCollisions(c)) {
+                        c.move(oldX, oldY);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
 

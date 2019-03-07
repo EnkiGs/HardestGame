@@ -3,10 +3,15 @@ package iut.projet.hardestgame.models;
 import android.graphics.Bitmap;
 
 public abstract class Collisionable {
+
     protected float x = 0;
     protected float y = 0;
-    public static int TILE_SIZE = 70;
+    public static int TILE_SIZE = 68;
     protected Bitmap bitmap;
+
+    // -1 : no collision / 0 : collision by top / 1 : collision by right / 2 : collision by bottom / 3 : collision by left
+    public abstract boolean checkCollisions(Box other);
+    public abstract boolean checkCollisions(Circle other);
 
     protected boolean ProjectionOnSegment(float Cx,float Cy,float Ax,float Ay,float Bx,float By)
     {

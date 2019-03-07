@@ -1,12 +1,18 @@
 package iut.projet.hardestgame.models;
 
+import android.graphics.Bitmap;
+
 public class Circle extends Collisionable {
     private float radius;
+    private float centerX;
+    private float centerY;
 
-    public Circle(float x, float y, float radius){
-        this.x = x;
-        this.y = y;
+    public Circle(float x, float y, float radius, Bitmap b){
+        this.centerX = x;
+        this.centerY = y;
         this.radius = radius;
+        this.bitmap = b;
+        calculateXY();
     }
 
     public boolean checkCollisions(Circle other){
@@ -44,11 +50,36 @@ public class Circle extends Collisionable {
             return true;
     }
 
+    public void calculateXY(){
+        this.x = this.centerX-radius;
+        this.y = this.centerY-radius;
+    }
+
+
     public float getRadius() {
         return radius;
     }
 
     public void setRadius(float radius) {
         this.radius = radius;
+        calculateXY();
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX){
+        this.centerX = centerX;
+        calculateXY();
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY){
+        this.centerY = centerY;
+        calculateXY();
     }
 }
