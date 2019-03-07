@@ -1,17 +1,21 @@
 package iut.projet.hardestgame.views;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import iut.projet.hardestgame.Activities.GameActivity;
+import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Circle;
+import iut.projet.hardestgame.models.Collisionable;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
 
@@ -41,8 +45,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
     Box b2;
     Circle c;
 
+    Collisionable[] tabCol;
 
-    public GameView(Context context) {
+    public GameView(Context context,Collisionable[] tabCol) {
         super(context);
         setFocusable(true);
         paint = new Paint();
@@ -53,9 +58,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.WHITE);
 
-        b1 = new Box(100, 100, 50, 50);
-        b2 = new Box(500,300, 50, 50);
+        b1 = new Box(100, 100, 50, 50, BitmapFactory.decodeResource(context.getResources(), R.drawable.tile));
+        b2 = new Box(500,300, 50, 50, BitmapFactory.decodeResource(context.getResources(), R.drawable.tile));
         c = new Circle(currX, currY, radius);
+
+        this.tabCol = tabCol;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
 
 
     public void update(float xSensor, float ySensor) {
-        paint.setColor(this.getBallColor());
+        /*paint.setColor(this.getBallColor());
         currX -= xSensor*3;
         currY += ySensor*3;
         c.setX(currX);
@@ -95,8 +102,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
             c.setY(currY);
         }
 
-
-
         canvas = surfaceHolder.lockCanvas();
 
         rect = new Rect(left, top, right, bottom);
@@ -110,8 +115,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback  {
         Paint p2 = new Paint();
         p2.setColor(Color.BLACK);
         canvas.drawRect(new Rect((int)b2.getX(),(int)b2.getY(),(int)(screenWidth-(screenWidth-(b2.getX()+b2.getWidth()))),(int)(screenHeight-(screenHeight-(b2.getY()+b2.getHeight())))),p2);
-
+        surfaceHolder.unlockCanvasAndPost(canvas);*/
+        canvas = surfaceHolder.lockCanvas();
+        rect = new Rect(left, top, right, bottom);
+        canvas.drawRect(rect, backgroundPaint);
+        for (Collisionable col : tabCol) {
+            if(col!=null) {
+                canvas.drawBitmap(col.getBitmap(),col.getX(),col.getY(),null);
+                //Toast.makeText(getContext(),"height : "+col.getBitmap().getHeight()+" / wdith : "+col.getBitmap().getWidth(),Toast.LENGTH_SHORT).show();
+            }
+        }
         surfaceHolder.unlockCanvasAndPost(canvas);
+        
     }
 
 

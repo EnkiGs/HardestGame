@@ -1,23 +1,29 @@
 package iut.projet.hardestgame.controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.Surface;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import iut.projet.hardestgame.Activities.GameActivity;
 import iut.projet.hardestgame.Activities.MainActivity;
 import iut.projet.hardestgame.R;
+import iut.projet.hardestgame.models.Collisionable;
+import iut.projet.hardestgame.models.Tile;
 import iut.projet.hardestgame.views.GameView;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 public class GameManager implements SensorEventListener {
 
@@ -28,10 +34,14 @@ public class GameManager implements SensorEventListener {
     private Sensor mAccelerator;
     private float mSensorX = 0;
     private float mSensorY = 0;
+    private Context context;
+    Collisionable[] tab;
 
-    public GameManager(GameActivity g){
+    public GameManager(GameActivity g, Context context){
+        this.context = context;
         ga = g;
-        gameView = new GameView(ga.getApplicationContext());
+        createLevel();
+        gameView = new GameView(context,tab);
         sensorManager = (SensorManager) ga.getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
@@ -40,7 +50,7 @@ public class GameManager implements SensorEventListener {
         rootLayout.addView(gameView);
        //MainActivity.getSongPlayer().stop();
         try {
-            MainActivity.getSongPlayer().putMusic(ga.getApplicationContext(), R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
+            MainActivity.getSongPlayer().putMusic(context, R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,9 +61,86 @@ public class GameManager implements SensorEventListener {
             }
         });
 
-
         gameLoop = new GameLoop(this);
         gameLoop.start();
+    }
+
+    private void createLevel() {
+        Bitmap[] bitmaps = getBitmaps();
+        InputStream inputStream = ga.getResources().openRawResource(R.raw.lvl1);
+        try {
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String str;
+                StringBuilder buf = new StringBuilder();
+                int nbC = Integer.parseInt(reader.readLine());
+                int nbL = Integer.parseInt(reader.readLine());
+                tab = new Collisionable[nbC*nbL];
+
+                while ((str = reader.readLine()) != null) {
+                    buf.append(str);
+                    buf.append("\n");
+                }
+                reader.close();
+                inputStream.close();
+                char[] tabL = buf.toString().toCharArray();
+                int i=0,j=0;
+                for (char c : tabL) {
+                    if(c=='\n') {
+                        i++;
+                        j=0;
+                    }
+                    else {
+                        Collisionable col = null;
+                        switch (c){
+                            case '1':
+                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
+                                break;
+                            case '2':
+                                col = new Player(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[1]);
+                                break;
+                            case '3':
+                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
+                                break;
+                            case '4':
+                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[3]);
+                                break;
+                            case '5':
+                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[4]);
+                                break;
+                            case '6':
+                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[5]);
+                                break;
+                            default:
+                                break;
+                        }
+                        //Toast.makeText(context,"nbC : "+nbC+" / i : "+i+" / j :"+j+" / tot :"+(i*nbC+j),Toast.LENGTH_SHORT).show();
+                        tab[i*nbC+j] = col;
+                        j++;
+
+                    }
+                    //Toast.makeText(ga.getBaseContext(), "c'est un n",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ga.getBaseContext(), c+"",Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG);
+        } catch (IOException e) {
+            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG);
+        }
+    }
+
+    private Bitmap[] getBitmaps() {
+        Bitmap[] bitmaps = new Bitmap[6];
+        bitmaps[0] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[1] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.player)).getBitmap();
+        bitmaps[2] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[3] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[4] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[5] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+
+        return bitmaps;
     }
 
 

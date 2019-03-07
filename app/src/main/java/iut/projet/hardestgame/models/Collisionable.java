@@ -1,8 +1,12 @@
 package iut.projet.hardestgame.models;
 
+import android.graphics.Bitmap;
+
 public abstract class Collisionable {
     protected float x = 0;
     protected float y = 0;
+    public static int TILE_SIZE = 70;
+    protected Bitmap bitmap;
 
     protected boolean ProjectionOnSegment(float Cx,float Cy,float Ax,float Ay,float Bx,float By)
     {
@@ -17,6 +21,10 @@ public abstract class Collisionable {
         if (s1*s2>0)
             return false;
         return true;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
     public float getX() {

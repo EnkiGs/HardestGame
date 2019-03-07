@@ -18,7 +18,7 @@ public class Circle extends Collisionable {
     }
 
     public boolean checkCollisions(Box other){
-        Box boxCercle = new Box(x-radius, y-radius, radius*2, radius*2);
+        Box boxCercle = new Box(x-radius, y-radius, radius*2, radius*2, null);
         if (!other.checkCollisions(boxCercle))
             return false;   // premier test
         if (collisionPointCircle(other.x,other.y)

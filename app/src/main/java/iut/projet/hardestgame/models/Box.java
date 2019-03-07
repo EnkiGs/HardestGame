@@ -1,14 +1,22 @@
 package iut.projet.hardestgame.models;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Picture;
+
+import iut.projet.hardestgame.R;
+
 public class Box extends Collisionable {
     private float width;
     private float height;
 
-    public Box(float x, float y, float width, float height){
+    public Box(float x, float y, float width, float height, Bitmap b){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.bitmap = b;
     }
 
     public boolean checkCollisions(Box other){
@@ -22,7 +30,7 @@ public class Box extends Collisionable {
     }
 
     public boolean checkCollisions(Circle other){
-        Box boxCercle = new Box(other.x-other.getRadius(), other.y-other.getRadius(), other.getRadius()*2, other.getRadius()*2);
+        Box boxCercle = new Box(other.x-other.getRadius(), other.y-other.getRadius(), other.getRadius()*2, other.getRadius()*2, null);
         if (!checkCollisions(boxCercle))
             return false;   // premier test
         if (other.collisionPointCircle(x,y)

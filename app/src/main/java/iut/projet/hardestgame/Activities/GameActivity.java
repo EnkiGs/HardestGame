@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        m = new GameManager(this);
+        m = new GameManager(this,this);
     }
 
     @Override

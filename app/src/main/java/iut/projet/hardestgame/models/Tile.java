@@ -1,16 +1,23 @@
 package iut.projet.hardestgame.models;
 
-import android.opengl.ETC1Util;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 
-public class Tile {
-    private ETC1Util.ETC1Texture texture;
-    private float x, y, height, width;
+public class Tile extends Box {
 
-    public Tile(float x, float y, float height, float width, ETC1Util.ETC1Texture texture) {
-        this.texture = texture;
-        this.x = x;
-        this.y = y;
-        this.height = height;
-        this.width = width;
+    private int color;
+
+    public Tile(float x, float y, float side, Bitmap b) {
+        super(x,y,side,side,b);
+        color = Color.rgb(50,50,255);
+    }
+
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
