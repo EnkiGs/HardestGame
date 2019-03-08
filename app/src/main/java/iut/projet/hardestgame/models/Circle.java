@@ -15,7 +15,7 @@ public class Circle extends Collisionable {
         calculateXY();
     }
 
-    public boolean checkCollisions(Circle other){
+/*    public boolean checkCollisions(Circle other){
         float d2 = (x-other.x)*(x-other.x) + (y-other.y)*(y-other.y);
         if (d2 > (radius + other.radius)*(radius + other.radius))
             return false;
@@ -39,7 +39,7 @@ public class Circle extends Collisionable {
         if (projvertical || projhorizontal)
             return true;   // cas E
         return false;  // cas B
-    }
+    }*/
 
     public boolean collisionPointCircle(float x,float y)
     {

@@ -99,7 +99,7 @@ public class GameManager implements SensorEventListener {
                                 col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
                                 break;
                             case '2':
-                                col = new Player((Collisionable.TILE_SIZE)*(j+(float)0.5),(Collisionable.TILE_SIZE)*(i+(float)0.5),(Collisionable.TILE_SIZE-50)/(float)2, bitmaps[1]);
+                                col = new Player(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
                                 break;
                             case '3':
                                 col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
@@ -149,7 +149,7 @@ public class GameManager implements SensorEventListener {
             @Override
             public void run() {
                 updateColl();
-                gameView.update(mSensorX, mSensorY);
+                gameView.update();
             }
         });
     }
@@ -169,21 +169,35 @@ public class GameManager implements SensorEventListener {
         }
     }
 
-    private void updatePlayer(Player c){
-        float oldX = c.getCenterX();
-        float oldY = c.getCenterY();
-        float currX = c.getCenterX()-mSensorX*3;
-        float currY = c.getCenterY()+mSensorY*3;
-        c.move(currX,currY);
+    private void updatePlayer(Player p){
+        float currX = p.getX()-mSensorX*3;
+        float currY = p.getY()+mSensorY*3;
 
         for (Collisionable col: tab) {
             if (col == null)
                 continue;
             switch (col.getClass().getSimpleName()) {
                 case "Tile":
-                    if (col.checkCollisions(c)) {
-                        c.move(oldX, oldY);
+                    /*p.checkCollisionsX((Tile)col);
+                    if(p.isCollisionLeft())
+                        System.out.println("Left");
+                    if(p.isCollisionRight())
+                        System.out.println("Right");
+                    if (p.isCollisionLeft() || p.isCollisionRight()) {
+                        currX = oldX;
                     }
+                    p.move(currX, currY);
+
+                    p.checkCollisionsY((Tile)col);
+                    if(p.isCollisionDown())
+                        System.out.println("Down");
+                    if(p.isCollisionUp())
+                        System.out.println("Up");
+                    if (p.isCollisionDown() || p.isCollisionUp()) {
+                        currY = oldY;
+                    }
+                    p.move(currX, currY);*/
+                    p.checkCollisions((Tile)col,currX,currY);
                     break;
                 default:
                     break;
