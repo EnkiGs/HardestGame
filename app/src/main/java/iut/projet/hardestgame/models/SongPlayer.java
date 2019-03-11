@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import iut.projet.hardestgame.R;
+import iut.projet.hardestgame.activities.MainActivity;
 
 public class SongPlayer implements Serializable {
     private MediaPlayer player;
@@ -39,7 +40,8 @@ public class SongPlayer implements Serializable {
 
     public void start(){
        // player.seekTo(currentPosition);
-        player.start();
+        if(MainActivity.isMusic())
+            player.start();
     }
 
     public void pause(){

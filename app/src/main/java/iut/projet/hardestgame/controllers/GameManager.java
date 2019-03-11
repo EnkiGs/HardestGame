@@ -1,8 +1,8 @@
 package iut.projet.hardestgame.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,9 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import iut.projet.hardestgame.Activities.GameActivity;
-import iut.projet.hardestgame.Activities.MainActivity;
+import iut.projet.hardestgame.activities.GameActivity;
+import iut.projet.hardestgame.activities.LevelsActivity;
+import iut.projet.hardestgame.activities.MainActivity;
 import iut.projet.hardestgame.R;
+import iut.projet.hardestgame.models.Arrival;
 import iut.projet.hardestgame.models.Collisionable;
 import iut.projet.hardestgame.models.Player;
 import iut.projet.hardestgame.models.Tile;
@@ -28,6 +30,7 @@ import iut.projet.hardestgame.views.GameView;
 
 public class GameManager implements SensorEventListener {
 
+    private int level = 1;
     private GameLoop gameLoop;
     private GameView gameView;
     private GameActivity ga;
@@ -37,6 +40,7 @@ public class GameManager implements SensorEventListener {
     private float mSensorY = 0;
     private Context context;
     Collisionable[] tab;
+    private boolean stopped;
 
     public GameManager(GameActivity g, Context context){
         this.context = context;
@@ -45,16 +49,12 @@ public class GameManager implements SensorEventListener {
         gameView = new GameView(context,tab);
         sensorManager = (SensorManager) ga.getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorOn();
 
         LinearLayout rootLayout = ga.findViewById(R.id.gameA);
         rootLayout.addView(gameView);
        //MainActivity.getSongPlayer().stop();
-        try {
-            MainActivity.getSongPlayer().putMusic(context, R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         ga.findViewById(R.id.buttonRetour).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,12 +63,35 @@ public class GameManager implements SensorEventListener {
         });
 
         gameLoop = new GameLoop(this);
+        gameLoop.running(true);
+        stopped = false;
+        gameLoop.start();
+    }
+
+    public void sensorOn(){
+        sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void setMusic(){
+        try {
+            MainActivity.getSongPlayer().putMusic(context, R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void relaunchGame(){
+        gameLoop = new GameLoop(this);
+        gameLoop.running(true);
+        stopped = false;
         gameLoop.start();
     }
 
     private void createLevel() {
         Bitmap[] bitmaps = getBitmaps();
-        InputStream inputStream = ga.getResources().openRawResource(R.raw.lvl1);
+        String lvl = "lvl"+level;
+        //InputStream inputStream = ga.getResources().openRawResource(R.raw.);
+        InputStream inputStream = ga.getResources().openRawResource(ga.getResources().getIdentifier(lvl,"raw",ga.getPackageName()));
         try {
             if (inputStream != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -102,7 +125,7 @@ public class GameManager implements SensorEventListener {
                                 col = new Player(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
                                 break;
                             case '3':
-                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
+                                col = new Arrival(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
                                 break;
                             case '4':
                                 col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[3]);
@@ -136,7 +159,7 @@ public class GameManager implements SensorEventListener {
         Bitmap[] bitmaps = new Bitmap[6];
         bitmaps[0] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
         bitmaps[1] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.player)).getBitmap();
-        bitmaps[2] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[2] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.arrival)).getBitmap();
         bitmaps[3] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
         bitmaps[4] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
         bitmaps[5] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
@@ -149,6 +172,8 @@ public class GameManager implements SensorEventListener {
             @Override
             public void run() {
                 updateColl();
+                if(stopped)
+                    return;
                 gameView.update();
             }
         });
@@ -159,9 +184,11 @@ public class GameManager implements SensorEventListener {
         for(Collisionable c : tab){
             if(c==null)
                 continue;
-            switch(c.getClass().getSimpleName()){
+            if(stopped)
+                break;
+            switch(c.getClass().getSimpleName()) {
                 case "Player":
-                    updatePlayer((Player)c);
+                    updatePlayer((Player) c);
                     break;
                 default:
                     break;
@@ -170,8 +197,12 @@ public class GameManager implements SensorEventListener {
     }
 
     private void updatePlayer(Player p){
-        float currX = p.getX()-mSensorX*3;
-        float currY = p.getY()+mSensorY*3;
+        float[] newPos = {p.getX(),p.getY()};
+        if(Math.abs(mSensorX)>1)
+            newPos[0] -= mSensorX*3;
+        if (Math.abs(mSensorY)>1)
+            newPos[1] += mSensorY*3;
+        float[] pos;
 
         for (Collisionable col: tab) {
             if (col == null)
@@ -197,15 +228,31 @@ public class GameManager implements SensorEventListener {
                         currY = oldY;
                     }
                     p.move(currX, currY);*/
-                    p.checkCollisions((Tile)col,currX,currY);
+                    pos = p.checkCollisions((Tile)col,newPos);
+                    if(pos != null)
+                        newPos = pos;
+                    break;
+                case "Arrival":
+                    if(p.checkArrival((Arrival) col)){
+                        stopped = true;
+                        endGame();
+                    }
                     break;
                 default:
                     break;
             }
+            if(stopped)
+                break;
         }
+        p.move(newPos[0],newPos[1]);
 
     }
 
+    public void endGame(){
+        stopRunning();
+        stop();
+        ga.startActivity(new Intent(context, LevelsActivity.class));
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -231,9 +278,22 @@ public class GameManager implements SensorEventListener {
 
     public void stopRunning() {
         gameLoop.running(false);
+        try {
+            gameLoop.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stop() {
         sensorManager.unregisterListener(this);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

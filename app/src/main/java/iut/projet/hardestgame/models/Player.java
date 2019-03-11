@@ -8,7 +8,11 @@ public class Player extends Box {
     }
 
     public void move(float x, float y){
-        setX(x);
-        setY(y);
+        this.x = x;
+        this.y = y;
+    }
+
+    public boolean checkArrival(Arrival a){
+        return a.x + a.getWidth() > x + getWidth() && a.x < x && a.y + a.getHeight() > y + getHeight() && a.y < y;
     }
 }

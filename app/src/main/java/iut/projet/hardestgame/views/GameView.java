@@ -1,21 +1,12 @@
 package iut.projet.hardestgame.views;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Toast;
 
-import iut.projet.hardestgame.Activities.GameActivity;
-import iut.projet.hardestgame.R;
-import iut.projet.hardestgame.controllers.GameManager;
-import iut.projet.hardestgame.models.Box;
-import iut.projet.hardestgame.models.Circle;
 import iut.projet.hardestgame.models.Collisionable;
 
 public class GameView extends View  {
@@ -54,11 +45,20 @@ public class GameView extends View  {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRect(rect, backgroundPaint);
+        Collisionable player = null;
         for (Collisionable col : tabCol) {
-            if(col!=null) {
+            if(col==null) {
+                continue;
+            }
+            if(col.getClass().getSimpleName().equals("Player")){
+                player = col;
+            }
+            else{
                 canvas.drawBitmap(col.getBitmap(),col.getX(),col.getY(),null);
             }
         }
+        if(player!=null)
+            canvas.drawBitmap(player.getBitmap(),player.getX(),player.getY(),null);
     }
 
 

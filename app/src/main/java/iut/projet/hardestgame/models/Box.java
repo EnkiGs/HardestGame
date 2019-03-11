@@ -20,10 +20,37 @@ public class Box extends Collisionable {
         this.bitmap = b;
     }
 
-
-    public void checkCollisions(Box other, float newX, float newY){
+    public float[] checkCollisions(Box other, float[] newPos){
         float oldX = x;
         float oldY = y;
+        boolean test = false;
+        x = newPos[0];
+        checkCollisionsX(other);
+        if (isCollisionLeft() || isCollisionRight()) {
+            //System.out.println("Left/Right");
+            test = true;
+            x = oldX;
+            newPos[0] = oldX;
+        }
+        x = oldX;
+        y = newPos[1];
+        checkCollisionsY(other);
+        if (isCollisionDown() || isCollisionUp()) {
+            //System.out.println("Up/Down");
+            test = true;
+            y = oldY;
+            newPos[1] = oldY;
+        }
+        y = oldY;
+
+        /*
+        System.out.println("News : "+newPos[0]+" / "+newPos[1]);
+        System.out.println("Olds : "+oldX+" / "+oldY);*/
+        if(test)
+            return newPos;
+        else
+            return null;
+        /*
         boolean test1 = false;
         boolean test2 = false;
         boolean test3 = false;
@@ -64,8 +91,6 @@ public class Box extends Collisionable {
             System.out.println("3");
         if(test4)
             System.out.println("4");
-        System.out.println("New : "+newX);
-        System.out.print("Old : "+oldX);
         if(test1 && test2 && test3 && !test4){
             x = newX;
             y = oldY;
@@ -77,7 +102,7 @@ public class Box extends Collisionable {
         else{
             x = 0;
             y = 0;
-        }
+        }*/
 
 
     }

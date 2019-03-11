@@ -1,12 +1,5 @@
 package iut.projet.hardestgame.controllers;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.view.MotionEvent;
-
-import iut.projet.hardestgame.Activities.GameActivity;
-import iut.projet.hardestgame.views.GameView;
-
 public class GameLoop extends Thread {
 
     private boolean running = true;
@@ -24,7 +17,9 @@ public class GameLoop extends Thread {
             Thread.sleep(60);
         } catch (InterruptedException ignored) {
         }
+        System.out.println("DEHORS");
         while (this.running) {
+            System.out.println("RUN");
             beep();
             try {
                 Thread.sleep(30);
