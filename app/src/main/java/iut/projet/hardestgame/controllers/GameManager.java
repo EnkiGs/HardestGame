@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -30,7 +31,8 @@ import iut.projet.hardestgame.views.GameView;
 
 public class GameManager implements SensorEventListener {
 
-    private int level = 1;
+    private static int level = 1;
+    private static int lvlMax = 2;
     private GameLoop gameLoop;
     private GameView gameView;
     private GameActivity ga;
@@ -45,12 +47,13 @@ public class GameManager implements SensorEventListener {
     public GameManager(GameActivity g, Context context){
         this.context = context;
         ga = g;
+        if(level<=0)
+            level=1;
         createLevel();
         gameView = new GameView(context,tab);
         sensorManager = (SensorManager) ga.getSystemService(Context.SENSOR_SERVICE);
         mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorOn();
-
         LinearLayout rootLayout = ga.findViewById(R.id.gameA);
         rootLayout.addView(gameView);
        //MainActivity.getSongPlayer().stop();
@@ -66,6 +69,10 @@ public class GameManager implements SensorEventListener {
         gameLoop.running(true);
         stopped = false;
         gameLoop.start();
+    }
+
+    public static int getLvlMax() {
+        return lvlMax;
     }
 
     public void sensorOn(){
@@ -251,7 +258,7 @@ public class GameManager implements SensorEventListener {
     public void endGame(){
         stopRunning();
         stop();
-        ga.startActivity(new Intent(context, LevelsActivity.class));
+        ga.endGame();
     }
 
     @Override
@@ -289,11 +296,19 @@ public class GameManager implements SensorEventListener {
         sensorManager.unregisterListener(this);
     }
 
-    public int getLevel() {
+    public boolean isStopped(){
+        return stopped;
+    }
+
+    public static int getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public static void setLevel(int lvl) {
+        level = lvl;
+    }
+
+    public static void nextLvl(){
+        level++;
     }
 }

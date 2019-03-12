@@ -66,4 +66,8 @@ public class GameActivity extends AppCompatActivity{
     }
 
 
+    public void endGame() {
+        Intent intent = new Intent(getApplicationContext(), WinActivity.class);
+        startActivity(intent);
+    }
 }

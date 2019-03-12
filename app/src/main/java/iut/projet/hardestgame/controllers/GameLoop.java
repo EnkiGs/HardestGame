@@ -17,9 +17,7 @@ public class GameLoop extends Thread {
             Thread.sleep(60);
         } catch (InterruptedException ignored) {
         }
-        System.out.println("DEHORS");
         while (this.running) {
-            System.out.println("RUN");
             beep();
             try {
                 Thread.sleep(30);

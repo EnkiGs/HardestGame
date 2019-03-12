@@ -10,4 +10,8 @@
     <string name="playername">PlayerName</string>
     <string name="ready">Ready</string>
     <string name="musiqueButton">Musique</string>
+    <string name="win_textView">LEVEL COMPLETE !</string>
+    <string name="menu_button_win">Menu</string>
+    <string name="next_button_win">Next</string>
+    <string name="thanks">Merci d\'avoir joué à notre jeu !</string>
 </resources>

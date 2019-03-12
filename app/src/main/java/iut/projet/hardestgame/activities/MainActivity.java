@@ -9,6 +9,7 @@ import android.view.View;
 import java.io.IOException;
 
 import iut.projet.hardestgame.R;
+import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.SongPlayer;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isMusic;
     private final String myPref = "mypreferences";
     private final String music = "music";
+    private final String level = "level";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         isMusic = sharedPreferences.getBoolean(music,true);
+        GameManager.setLevel(sharedPreferences.getInt(level,1));
     }
 
     @Override
@@ -73,9 +76,15 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         SharedPreferences.Editor ed = sharedPreferences.edit();
         ed.putBoolean(music,isMusic);
+        ed.putInt(level,GameManager.getLevel());
         ed.apply();
     }
 
+    @Override
+    protected void onDestroy() {
+        GameManager.setLevel(1);
+        super.onDestroy();
+    }
 
     public void showLevels(View view){
         restart = false;
