@@ -27,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         isMusic = sharedPreferences.getBoolean(music,true);
-        GameManager.setLevel(sharedPreferences.getInt(level,1));
+        int lvl = sharedPreferences.getInt(level,1);
+        if(GameManager.getLevel()<lvl)
+            GameManager.setLevel(lvl);
+        System.out.println("MainActi onCreate");
     }
 
     @Override
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             restart = true;
         }
         songPlayer.start();
+        System.out.println("MainActi onResume : "+GameManager.getLevel());
+
     }
 
     @Override
@@ -72,17 +77,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        System.out.println("STOP MAIN");
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //GameManager.setLevel(1);
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         SharedPreferences.Editor ed = sharedPreferences.edit();
         ed.putBoolean(music,isMusic);
         ed.putInt(level,GameManager.getLevel());
         ed.apply();
-    }
-
-    @Override
-    protected void onDestroy() {
-        GameManager.setLevel(1);
+        System.out.println("DESTROY MAIN");
         super.onDestroy();
     }
 
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startGame(View view){
         restart = false;
+        System.out.println("MainActi startGame : "+GameManager.getLevel());
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }

@@ -17,23 +17,19 @@ public class WinActivity extends AppCompatActivity {
     }
 
     public void onNextLevelClick(View view) {
-        GameManager.nextLvl();
-        if(GameManager.getLevel()>GameManager.getLvlMax()) {
-            winnerOfTheGame();
-            return;
-        }
         Intent intent = new Intent(getApplicationContext(),GameActivity.class);
         startActivity(intent);
     }
 
     public void onMenuClick(View view) {
+        System.out.println("WinActi : "+GameManager.getLevel());
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
     }
 
-
-    public void winnerOfTheGame() {
-        Intent intent = new Intent(getApplicationContext(), GameWinnerActivity.class);
-        startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        super.onBackPressed();
     }
 }

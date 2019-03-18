@@ -37,6 +37,8 @@ public class GameActivity extends AppCompatActivity{
         super.onResume();
         System.out.println("RESUME");
         MainActivity.getSongPlayer().start();
+        System.out.println("GameActi onResume : "+GameManager.getLevel());
+
     }
 
     @Override
@@ -67,7 +69,20 @@ public class GameActivity extends AppCompatActivity{
 
 
     public void endGame() {
-        Intent intent = new Intent(getApplicationContext(), WinActivity.class);
+        GameManager.nextLvl();
+        if(GameManager.getLevel()>GameManager.getLvlMax()) {
+            GameManager.prevLvl();
+            Intent intent = new Intent(getApplicationContext(), GameWinnerActivity.class);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(getApplicationContext(), WinActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public void loseGame() {
+        Intent intent = new Intent(getApplicationContext(),LoseActivity.class);
         startActivity(intent);
     }
 }

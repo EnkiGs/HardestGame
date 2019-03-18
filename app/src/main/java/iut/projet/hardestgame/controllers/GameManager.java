@@ -1,15 +1,16 @@
 package iut.projet.hardestgame.controllers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.view.MotionEvent;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -20,11 +21,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import iut.projet.hardestgame.activities.GameActivity;
-import iut.projet.hardestgame.activities.LevelsActivity;
 import iut.projet.hardestgame.activities.MainActivity;
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.models.Arrival;
+import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Collisionable;
+import iut.projet.hardestgame.models.EnemyH;
+import iut.projet.hardestgame.models.EnemyV;
 import iut.projet.hardestgame.models.Player;
 import iut.projet.hardestgame.models.Tile;
 import iut.projet.hardestgame.views.GameView;
@@ -33,6 +36,7 @@ public class GameManager implements SensorEventListener {
 
     private static int level = 1;
     private static int lvlMax = 2;
+    private static int nbDeaths = 0;
     private GameLoop gameLoop;
     private GameView gameView;
     private GameActivity ga;
@@ -43,16 +47,25 @@ public class GameManager implements SensorEventListener {
     private Context context;
     Collisionable[] tab;
     private boolean stopped;
+    private int screenWidth;
+    private int screenHeight;
+    private int posDepX;
+    private int posDepY;
 
     public GameManager(GameActivity g, Context context){
         this.context = context;
         ga = g;
         if(level<=0)
             level=1;
+        WindowManager w = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE));
+        Point size = new Point();
+        w.getDefaultDisplay().getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
         createLevel();
         gameView = new GameView(context,tab);
-        sensorManager = (SensorManager) ga.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mAccelerator = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sensorOn();
         LinearLayout rootLayout = ga.findViewById(R.id.gameA);
         rootLayout.addView(gameView);
@@ -71,9 +84,6 @@ public class GameManager implements SensorEventListener {
         gameLoop.start();
     }
 
-    public static int getLvlMax() {
-        return lvlMax;
-    }
 
     public void sensorOn(){
         sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
@@ -98,7 +108,7 @@ public class GameManager implements SensorEventListener {
         Bitmap[] bitmaps = getBitmaps();
         String lvl = "lvl"+level;
         //InputStream inputStream = ga.getResources().openRawResource(R.raw.);
-        InputStream inputStream = ga.getResources().openRawResource(ga.getResources().getIdentifier(lvl,"raw",ga.getPackageName()));
+        InputStream inputStream = context.getResources().openRawResource(context.getResources().getIdentifier(lvl,"raw",context.getPackageName()));
         try {
             if (inputStream != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -117,6 +127,8 @@ public class GameManager implements SensorEventListener {
                 inputStream.close();
                 char[] tabL = buf.toString().toCharArray();
                 int i=0,j=0;
+                int departH = (screenWidth-nbC*Collisionable.TILE_SIZE)/2;
+                int departV =  (screenHeight-nbL*Collisionable.TILE_SIZE)/2;
                 for (char c : tabL) {
                     if(c=='\n') {
                         i++;
@@ -126,22 +138,24 @@ public class GameManager implements SensorEventListener {
                         Collisionable col = null;
                         switch (c){
                             case '1':
-                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
+                                col = new Tile(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
                                 break;
                             case '2':
-                                col = new Player(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
+                                posDepX = departH+Collisionable.TILE_SIZE*j;
+                                posDepY = departV+Collisionable.TILE_SIZE*i;
+                                col = new Player(posDepX,posDepY,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
                                 break;
                             case '3':
-                                col = new Arrival(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
+                                col = new Arrival(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
                                 break;
                             case '4':
-                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[3]);
+                                col = new EnemyH(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[3]);
                                 break;
                             case '5':
-                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[4]);
+                                col = new EnemyV(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[3]);
                                 break;
                             case '6':
-                                col = new Tile(Collisionable.TILE_SIZE*j,Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[5]);
+                                col = new Tile(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[4]);
                                 break;
                             default:
                                 break;
@@ -164,12 +178,11 @@ public class GameManager implements SensorEventListener {
 
     private Bitmap[] getBitmaps() {
         Bitmap[] bitmaps = new Bitmap[6];
-        bitmaps[0] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
-        bitmaps[1] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.player)).getBitmap();
-        bitmaps[2] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.arrival)).getBitmap();
-        bitmaps[3] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
-        bitmaps[4] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
-        bitmaps[5] = ((BitmapDrawable)ga.getResources().getDrawable(R.drawable.tile)).getBitmap();
+        bitmaps[0] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.tile,null)).getBitmap();
+        bitmaps[1] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player,null)).getBitmap();
+        bitmaps[2] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.arrival,null)).getBitmap();
+        bitmaps[3] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.ennemi,null)).getBitmap();
+        bitmaps[4] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.tile,null)).getBitmap();
         return bitmaps;
     }
 
@@ -193,9 +206,26 @@ public class GameManager implements SensorEventListener {
                 continue;
             if(stopped)
                 break;
+            float[] newPos;
             switch(c.getClass().getSimpleName()) {
                 case "Player":
                     updatePlayer((Player) c);
+                    break;
+                case "EnemyH":
+                    newPos = new float[]{c.getX()+2*level*0.75F*((EnemyH)c).getSens(),c.getY()};
+                    newPos = updateEnemy(newPos,(Box)c);
+                    if(c.getX()==newPos[0]){
+                        ((EnemyH)c).invertSens();
+                    }
+                    ((EnemyH)c).move(newPos[0],newPos[1]);
+                    break;
+                case "EnemyV":
+                    newPos = new float[]{c.getX(),c.getY()+2*((EnemyV)c).getSens()};
+                    newPos = updateEnemy(newPos,(Box)c);
+                    if(c.getY()==newPos[1]){
+                        ((EnemyV)c).invertSens();
+                    }
+                    ((EnemyV)c).move(newPos[0],newPos[1]);
                     break;
                 default:
                     break;
@@ -203,11 +233,29 @@ public class GameManager implements SensorEventListener {
         }
     }
 
+    private float[] updateEnemy(float[] newPos, Box e) {
+        float[] pos;
+        for (Collisionable col: tab) {
+            if (col == null)
+                continue;
+            switch (col.getClass().getSimpleName()) {
+                case "Tile":
+                    pos = e.checkCollisions((Tile)col,newPos);
+                    if(pos != null)
+                        newPos = pos;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return newPos;
+    }
+
     private void updatePlayer(Player p){
         float[] newPos = {p.getX(),p.getY()};
-        if(Math.abs(mSensorX)>1)
+        if(Math.abs(mSensorX)>0.5)
             newPos[0] -= mSensorX*3;
-        if (Math.abs(mSensorY)>1)
+        if (Math.abs(mSensorY)>0.5)
             newPos[1] += mSensorY*3;
         float[] pos;
 
@@ -216,25 +264,6 @@ public class GameManager implements SensorEventListener {
                 continue;
             switch (col.getClass().getSimpleName()) {
                 case "Tile":
-                    /*p.checkCollisionsX((Tile)col);
-                    if(p.isCollisionLeft())
-                        System.out.println("Left");
-                    if(p.isCollisionRight())
-                        System.out.println("Right");
-                    if (p.isCollisionLeft() || p.isCollisionRight()) {
-                        currX = oldX;
-                    }
-                    p.move(currX, currY);
-
-                    p.checkCollisionsY((Tile)col);
-                    if(p.isCollisionDown())
-                        System.out.println("Down");
-                    if(p.isCollisionUp())
-                        System.out.println("Up");
-                    if (p.isCollisionDown() || p.isCollisionUp()) {
-                        currY = oldY;
-                    }
-                    p.move(currX, currY);*/
                     pos = p.checkCollisions((Tile)col,newPos);
                     if(pos != null)
                         newPos = pos;
@@ -245,6 +274,16 @@ public class GameManager implements SensorEventListener {
                         endGame();
                     }
                     break;
+                case "EnemyH":
+                case "EnemyV":
+                    pos = p.checkCollisions((Box)col,newPos);
+                    if(pos != null) {
+                        newPos[0] = posDepX;
+                        newPos[1] = posDepY;
+                        nbDeaths++;
+                        checkDeaths();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -253,6 +292,14 @@ public class GameManager implements SensorEventListener {
         }
         p.move(newPos[0],newPos[1]);
 
+    }
+
+    private void checkDeaths(){
+        if(nbDeaths==5){
+            level = 1;
+            nbDeaths = 0;
+            ga.loseGame();
+        }
     }
 
     public void endGame(){
@@ -273,14 +320,6 @@ public class GameManager implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    public float getmSensorX() {
-        return mSensorX;
-    }
-
-    public float getmSensorY() {
-        return mSensorY;
     }
 
     public void stopRunning() {
@@ -311,4 +350,14 @@ public class GameManager implements SensorEventListener {
     public static void nextLvl(){
         level++;
     }
+
+    public static void prevLvl() {
+        level--;
+    }
+
+    public static int getLvlMax() {
+        return lvlMax;
+    }
+
+
 }

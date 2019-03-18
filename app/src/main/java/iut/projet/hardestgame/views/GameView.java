@@ -69,4 +69,12 @@ public class GameView extends View  {
     public int isWidth(){return width;}
 
     public int isHeight(){return height;}
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
 }

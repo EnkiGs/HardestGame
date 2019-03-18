@@ -27,7 +27,6 @@ public class Box extends Collisionable {
         x = newPos[0];
         checkCollisionsX(other);
         if (isCollisionLeft() || isCollisionRight()) {
-            //System.out.println("Left/Right");
             test = true;
             x = oldX;
             newPos[0] = oldX;
@@ -36,75 +35,16 @@ public class Box extends Collisionable {
         y = newPos[1];
         checkCollisionsY(other);
         if (isCollisionDown() || isCollisionUp()) {
-            //System.out.println("Up/Down");
             test = true;
             y = oldY;
             newPos[1] = oldY;
         }
         y = oldY;
 
-        /*
-        System.out.println("News : "+newPos[0]+" / "+newPos[1]);
-        System.out.println("Olds : "+oldX+" / "+oldY);*/
         if(test)
             return newPos;
         else
             return null;
-        /*
-        boolean test1 = false;
-        boolean test2 = false;
-        boolean test3 = false;
-        boolean test4 = false;
-        x = newX;
-        y = newY;
-        checkCollisionsX(other);
-        if (isCollisionLeft() || isCollisionRight()) {
-            test1 = true;
-            x = oldX;
-        }
-        checkCollisionsY(other);
-        if (isCollisionDown() || isCollisionUp()) {
-            test2 = true;
-            y = oldY;
-        }
-
-        if(!test1 && !test2)
-            return;
-
-        x = newX;
-        y = newY;
-        checkCollisionsY(other);
-        if (isCollisionDown() || isCollisionUp()) {
-            test3 = true;
-            y = oldY;
-        }
-        checkCollisionsX(other);
-        if (isCollisionLeft() || isCollisionRight()) {
-            test4 = true;
-            x = oldX;
-        }
-        if(test1)
-            System.out.println("1");
-        if(test2)
-            System.out.println("2");
-        if(test3)
-            System.out.println("3");
-        if(test4)
-            System.out.println("4");
-        if(test1 && test2 && test3 && !test4){
-            x = newX;
-            y = oldY;
-        }
-        else if(test1 && !test2 && test3 && test4){
-            x = oldX;
-            y = newY;
-        }
-        else{
-            x = 0;
-            y = 0;
-        }*/
-
-
     }
 
     public void checkCollisionsX(Box other){
