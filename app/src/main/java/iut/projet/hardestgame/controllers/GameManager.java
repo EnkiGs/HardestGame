@@ -35,7 +35,7 @@ import iut.projet.hardestgame.views.GameView;
 public class GameManager implements SensorEventListener {
 
     private static int level = 1;
-    private static int lvlMax = 2;
+    private static int lvlMax = 6;
     private static int nbDeaths = 0;
     private GameLoop gameLoop;
     private GameView gameView;
@@ -91,7 +91,7 @@ public class GameManager implements SensorEventListener {
 
     public void setMusic(){
         try {
-            MainActivity.getSongPlayer().putMusic(context, R.raw.giletsjaunes); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
+            MainActivity.getSongPlayer().putMusic(context, R.raw.gamemusic); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,7 +107,6 @@ public class GameManager implements SensorEventListener {
     private void createLevel() {
         Bitmap[] bitmaps = getBitmaps();
         String lvl = "lvl"+level;
-        //InputStream inputStream = ga.getResources().openRawResource(R.raw.);
         InputStream inputStream = context.getResources().openRawResource(context.getResources().getIdentifier(lvl,"raw",context.getPackageName()));
         try {
             if (inputStream != null) {
