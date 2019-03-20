@@ -1,21 +1,16 @@
 package iut.projet.hardestgame.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Surface;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.util.Locale;
-
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.controllers.GameManager;
-import iut.projet.hardestgame.models.LevelButton;
+import iut.projet.hardestgame.views.LevelButton;
 
 public class LevelsActivity extends AppCompatActivity {
     private TableLayout table;
@@ -37,15 +32,15 @@ public class LevelsActivity extends AppCompatActivity {
         w.getDefaultDisplay().getSize(size);
         screenWidth = size.x;
         screenHeight = size.y;
-        System.out.println(screenHeight+"/"+screenWidth);
         nbCol = screenWidth/ LevelButton.getSize();
 
         table = findViewById(R.id.LevelsTable);
         buttons = new LevelButton[GameManager.getLvlMax()];
         int nbLvls = GameManager.getLvlMax();
+        int currentLvl = GameManager.getLevel();
         for(int i=0;i< nbLvls;i++){
-            LevelButton b = new LevelButton(this);
-            b.setText(String.format("%d",i+1));
+            LevelButton b = new LevelButton(this,String.format("%d",i+1), i+1<=currentLvl);
+            table.setColumnShrinkable(i,true);
             buttons[i]=b;
         }
         nbLines = nbLvls/nbCol+1;
@@ -69,5 +64,10 @@ public class LevelsActivity extends AppCompatActivity {
     public void onBackPressed() {
         startActivity(new Intent(getApplicationContext(),MainActivity.class));
         super.onBackPressed();
+    }
+
+    public void levelChoosed(int lvl){
+        GameManager.setLevel(lvl);
+        startActivity(new Intent(this,GameActivity.class));
     }
 }

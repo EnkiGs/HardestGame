@@ -35,7 +35,7 @@ import iut.projet.hardestgame.views.GameView;
 public class GameManager implements SensorEventListener {
 
     private static int level = 1;
-    private static int lvlMax = 6;
+    private static int lvlMax = 2;
     private static int nbDeaths = 0;
     private GameLoop gameLoop;
     private GameView gameView;
