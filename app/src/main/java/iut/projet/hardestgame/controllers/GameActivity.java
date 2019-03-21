@@ -124,8 +124,6 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-        songPlayer.stop();
-
 
         LinearLayout rootLayout = findViewById(R.id.ballDisplay);
 
