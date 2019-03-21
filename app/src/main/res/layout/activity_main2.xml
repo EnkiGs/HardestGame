@@ -4,8 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/port_background_main"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.Main2Activity"
+    android:background="@drawable/port_background_main">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/background_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main2" />
 
     <Button
         android:id="@+id/StartButton"
@@ -39,7 +57,7 @@
         tools:text="@string/button_levels" />
 
     <TextView
-        android:id="@+id/title_app"
+        android:id="@+id/textView"
         android:layout_width="394dp"
         android:layout_height="69dp"
         android:layout_marginStart="8dp"
@@ -59,22 +77,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25"
-        tools:text="@string/app_name"
-        android:transitionName="go_settings_transition"/>
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/conf_button_desc"
-        android:onClick="config"
-        android:tint="@android:color/background_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/conf_ico" />
+        tools:text="@string/app_name" />
 
 </android.support.constraint.ConstraintLayout>
