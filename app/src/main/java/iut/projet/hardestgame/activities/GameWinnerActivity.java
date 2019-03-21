@@ -16,13 +16,13 @@ public class GameWinnerActivity extends AppCompatActivity {
     }
 
     public void onMenuClick(View view) {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        startActivity(new Intent(getApplicationContext(),Main2Activity.class));
         super.onBackPressed();
     }
 }

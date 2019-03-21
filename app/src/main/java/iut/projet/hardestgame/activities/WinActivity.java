@@ -23,13 +23,13 @@ public class WinActivity extends AppCompatActivity {
 
     public void onMenuClick(View view) {
         System.out.println("WinActi : "+GameManager.getLevel());
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        startActivity(new Intent(getApplicationContext(),Main2Activity.class));
         super.onBackPressed();
     }
 }

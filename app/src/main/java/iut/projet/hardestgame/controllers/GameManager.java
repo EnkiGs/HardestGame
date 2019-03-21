@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import iut.projet.hardestgame.activities.GameActivity;
-import iut.projet.hardestgame.activities.MainActivity;
 import iut.projet.hardestgame.R;
+import iut.projet.hardestgame.activities.GameActivity;
+import iut.projet.hardestgame.activities.Main2Activity;
 import iut.projet.hardestgame.models.Arrival;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Collisionable;
@@ -69,7 +69,6 @@ public class GameManager implements SensorEventListener {
         sensorOn();
         LinearLayout rootLayout = ga.findViewById(R.id.gameA);
         rootLayout.addView(gameView);
-       //MainActivity.getSongPlayer().stop();
 
         ga.findViewById(R.id.buttonRetour).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +90,7 @@ public class GameManager implements SensorEventListener {
 
     public void setMusic(){
         try {
-            MainActivity.getSongPlayer().putMusic(context, R.raw.gamemusic); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
+            Main2Activity.getSongPlayer().putMusic(context, R.raw.gamemusic); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
         } catch (IOException e) {
             e.printStackTrace();
         }

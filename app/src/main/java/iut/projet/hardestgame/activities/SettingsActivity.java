@@ -17,7 +17,7 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         final CheckBox cb = findViewById(R.id.musiqueCheckBox);
-        if(MainActivity.isMusic())
+        if(Main2Activity.isMusic())
             cb.setChecked(true);
         else
             cb.setChecked(false);
@@ -26,9 +26,9 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(cb.isChecked())
-                    MainActivity.setIsMusic(true);
+                    Main2Activity.setIsMusic(true);
                 else
-                    MainActivity.setIsMusic(false);
+                    Main2Activity.setIsMusic(false);
             }
         });
     }

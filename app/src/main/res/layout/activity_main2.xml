@@ -30,7 +30,7 @@
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:onClick="startGame"
+        android:onClick="showLevels"
         android:text="@string/button_start"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:text="@string/button_start" />
 
-    <Button
+<!--    <Button
         android:id="@+id/LevelsButton"
         android:layout_width="170dp"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/StartButton"
         app:layout_constraintTop_toBottomOf="@+id/StartButton"
-        tools:text="@string/button_levels" />
+        tools:text="@string/button_levels" />-->
 
     <TextView
         android:id="@+id/textView"

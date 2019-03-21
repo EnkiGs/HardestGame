@@ -36,7 +36,7 @@ public class GameActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         System.out.println("RESUME");
-        MainActivity.getSongPlayer().start();
+        Main2Activity.getSongPlayer().start();
         System.out.println("GameActi onResume : "+GameManager.getLevel());
 
     }
@@ -44,7 +44,8 @@ public class GameActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         System.out.println("PAUSE");
-        MainActivity.getSongPlayer().pause();
+        if(Main2Activity.isMusic())
+            Main2Activity.pauseMusic();
         m.stopRunning();
         super.onPause();
     }
@@ -63,7 +64,7 @@ public class GameActivity extends AppCompatActivity{
     }
 
     public void backAction(){
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
         startActivity(intent);
     }
 

@@ -1,15 +1,13 @@
 package iut.projet.hardestgame.models;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
 import java.io.IOException;
 import java.io.Serializable;
 
-import iut.projet.hardestgame.R;
-import iut.projet.hardestgame.activities.MainActivity;
+import iut.projet.hardestgame.activities.Main2Activity;
 
 public class SongPlayer implements Serializable {
     private MediaPlayer player;
@@ -40,7 +38,7 @@ public class SongPlayer implements Serializable {
 
     public void start(){
        // player.seekTo(currentPosition);
-        if(MainActivity.isMusic())
+        if(Main2Activity.isMusic())
             player.start();
     }
 
