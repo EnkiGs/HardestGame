@@ -80,6 +80,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         app:layout_constraintVertical_bias="0.2"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"
+        android:transitionName="app_title_name"/>
 
 </android.support.constraint.ConstraintLayout>

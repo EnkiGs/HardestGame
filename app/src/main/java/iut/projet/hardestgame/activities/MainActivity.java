@@ -93,10 +93,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonSettings :
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             case R.id.aboutUS :
                 Intent intentAbout = new Intent(this, UsActivity.class );
                 startActivity(intentAbout);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
     public void showLevels(View view){
         Intent intent = new Intent(this, LevelsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
     @Override
