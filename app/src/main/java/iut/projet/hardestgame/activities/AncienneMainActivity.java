@@ -4,10 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import java.io.IOException;
@@ -16,7 +12,8 @@ import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.SongPlayer;
 
-public class Main2Activity extends AppCompatActivity {
+
+public class AncienneMainActivity extends AppCompatActivity {
 
     private static SongPlayer songPlayer = null;
     private static boolean restart = false;
@@ -27,18 +24,32 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setTitle("");
+        setContentView(R.layout.activity_main);
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         isMusic = sharedPreferences.getBoolean(music,true);
         int lvl = sharedPreferences.getInt(level,1);
         if(GameManager.getLevel()<lvl)
             GameManager.setLevel(lvl);
-        System.out.println("MAIN2");
+        System.out.println("MainActi onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*if(songPlayer==null) {
+            songPlayer = new SongPlayer();
+            restart = false;
+        }
+        else{
+            restart = true;
+        }*/
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        System.out.println("RESTORE");
     }
 
     @Override
@@ -61,9 +72,14 @@ public class Main2Activity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if(isMusic())
-            pauseMusic();
+        songPlayer.pause();
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        System.out.println("STOP MAIN");
+        super.onStop();
     }
 
     @Override
@@ -78,31 +94,17 @@ public class Main2Activity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
+    public void showLevels(View view){
+        restart = false;
+        Intent intent = new Intent(this, LevelsActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.buttonSettings :
-                restart = false;
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.aboutUS :
-                restart = false;
-                Intent intentAbout = new Intent(this, UsActivity.class );
-                startActivity(intentAbout);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void startGame(View view){
+        restart = false;
+        System.out.println("MainActi startGame : "+GameManager.getLevel());
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
     }
 
     public void config(View view){
@@ -111,16 +113,7 @@ public class Main2Activity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showLevels(View view){
-        restart = false;
-        Intent intent = new Intent(this, LevelsActivity.class);
-        startActivity(intent);
-    }
-/*
-    public void startGame(View view){
-        Intent intent = new Intent(this, LevelsActivity.class);
-        startActivity(intent);
-    }*/
+
 
     public static SongPlayer getSongPlayer(){
         return songPlayer;
@@ -131,12 +124,8 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public static void setIsMusic(boolean isMusic) {
-        Main2Activity.isMusic = isMusic;
+        AncienneMainActivity.isMusic = isMusic;
         if(!isMusic)
             songPlayer.stop();
-    }
-
-    public static void pauseMusic(){
-        songPlayer.pause();
     }
 }

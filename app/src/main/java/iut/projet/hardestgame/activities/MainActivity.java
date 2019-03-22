@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.io.IOException;
@@ -23,32 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         isMusic = sharedPreferences.getBoolean(music,true);
-        int lvl = sharedPreferences.getInt(level,1);
-        if(GameManager.getLevel()<lvl)
-            GameManager.setLevel(lvl);
-        System.out.println("MainActi onCreate");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        /*if(songPlayer==null) {
-            songPlayer = new SongPlayer();
-            restart = false;
-        }
-        else{
-            restart = true;
-        }*/
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        System.out.println("RESTORE");
+/*        int lvl = sharedPreferences.getInt(level,1);
+        if(GameManager.getLvlMin()<lvl)
+            GameManager.setLvlMin(lvl);*/
+        System.out.println("MAIN2");
     }
 
     @Override
@@ -71,14 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        songPlayer.pause();
+        if(isMusic())
+            pauseMusic();
         super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        System.out.println("STOP MAIN");
-        super.onStop();
     }
 
     @Override
@@ -87,32 +72,58 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(myPref,MODE_PRIVATE);
         SharedPreferences.Editor ed = sharedPreferences.edit();
         ed.putBoolean(music,isMusic);
-        ed.putInt(level,GameManager.getLevel());
+        //ed.putInt(level,GameManager.getLvlMin());
         ed.apply();
         System.out.println("DESTROY MAIN");
         super.onDestroy();
     }
 
-    public void showLevels(View view){
-        restart = false;
-        Intent intent = new Intent(this, LevelsActivity.class);
-        startActivity(intent);
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    public void startGame(View view){
-        restart = false;
-        System.out.println("MainActi startGame : "+GameManager.getLevel());
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.buttonSettings :
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.aboutUS :
+                Intent intentAbout = new Intent(this, UsActivity.class );
+                startActivity(intentAbout);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void config(View view){
-        restart = false;
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
+    public void showLevels(View view){
+        Intent intent = new Intent(this, LevelsActivity.class);
+        startActivity(intent);
+    }
 
+    @Override
+    public void startActivity(Intent intent) {
+        restart = false;
+        super.startActivity(intent);
+    }
+
+    /*
+    public void startGame(View view){
+        Intent intent = new Intent(this, LevelsActivity.class);
+        startActivity(intent);
+    }*/
 
     public static SongPlayer getSongPlayer(){
         return songPlayer;
@@ -126,5 +137,9 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.isMusic = isMusic;
         if(!isMusic)
             songPlayer.stop();
+    }
+
+    public static void pauseMusic(){
+        songPlayer.pause();
     }
 }

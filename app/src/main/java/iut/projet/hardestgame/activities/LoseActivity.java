@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import iut.projet.hardestgame.R;
-import iut.projet.hardestgame.controllers.GameManager;
 
 public class LoseActivity extends AppCompatActivity {
 
@@ -22,13 +21,13 @@ public class LoseActivity extends AppCompatActivity {
     }
 
     public void onMenuClick(View view) {
-        Intent intent = new Intent(getApplicationContext(),Main2Activity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),Main2Activity.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         super.onBackPressed();
     }
 }

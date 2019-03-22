@@ -22,12 +22,13 @@ import java.io.InputStreamReader;
 
 import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.activities.GameActivity;
-import iut.projet.hardestgame.activities.Main2Activity;
+import iut.projet.hardestgame.activities.MainActivity;
 import iut.projet.hardestgame.models.Arrival;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Collisionable;
 import iut.projet.hardestgame.models.EnemyH;
 import iut.projet.hardestgame.models.EnemyV;
+import iut.projet.hardestgame.models.Key;
 import iut.projet.hardestgame.models.Player;
 import iut.projet.hardestgame.models.Tile;
 import iut.projet.hardestgame.views.GameView;
@@ -35,7 +36,8 @@ import iut.projet.hardestgame.views.GameView;
 public class GameManager implements SensorEventListener {
 
     private static int level = 1;
-    private static int lvlMax = 2;
+    private static int lvlMin = 1;
+    private static int lvlMax = 4;
     private static int nbDeaths = 0;
     private GameLoop gameLoop;
     private GameView gameView;
@@ -51,6 +53,10 @@ public class GameManager implements SensorEventListener {
     private int screenHeight;
     private int posDepX;
     private int posDepY;
+    private int nbKeys = 0;
+    private Bitmap[] bitmaps;
+    private Bitmap[] bitmapsPlayer;
+    private int playerNum = 0;
 
     public GameManager(GameActivity g, Context context){
         this.context = context;
@@ -81,16 +87,18 @@ public class GameManager implements SensorEventListener {
         gameLoop.running(true);
         stopped = false;
         gameLoop.start();
+        getBitmapsPlayer();
+        getBitmaps();
     }
 
 
-    public void sensorOn(){
+    private void sensorOn(){
         sensorManager.registerListener(this, mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void setMusic(){
         try {
-            Main2Activity.getSongPlayer().putMusic(context, R.raw.gamemusic); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
+            MainActivity.getSongPlayer().putMusic(context, R.raw.gamemusic); //= new SongPlayer(getBaseContext(), R.raw.musiquedebut);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,7 +112,6 @@ public class GameManager implements SensorEventListener {
     }
 
     private void createLevel() {
-        Bitmap[] bitmaps = getBitmaps();
         String lvl = "lvl"+level;
         InputStream inputStream = context.getResources().openRawResource(context.getResources().getIdentifier(lvl,"raw",context.getPackageName()));
         try {
@@ -144,44 +151,59 @@ public class GameManager implements SensorEventListener {
                                 col = new Player(posDepX,posDepY,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
                                 break;
                             case '3':
-                                col = new Arrival(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2]);
+                                col = new Arrival(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2], bitmaps[3]);
                                 break;
                             case '4':
-                                col = new EnemyH(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[3]);
+                                col = new EnemyH(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4]);
                                 break;
                             case '5':
-                                col = new EnemyV(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[3]);
+                                col = new EnemyV(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4]);
                                 break;
                             case '6':
-                                col = new Tile(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[4]);
+                                col = new Key(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[5]);
+                                nbKeys++;
                                 break;
                             default:
                                 break;
                         }
-                        //Toast.makeText(context,"nbC : "+nbC+" / i : "+i+" / j :"+j+" / tot :"+(i*nbC+j),Toast.LENGTH_SHORT).show();
                         tab[i*nbC+j] = col;
                         j++;
 
                     }
-                    //Toast.makeText(ga.getBaseContext(), "c'est un n",Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(ga.getBaseContext(), c+"",Toast.LENGTH_SHORT).show();
+                }
+                if(nbKeys!=0) {
+                    for (Collisionable c : tab) {
+                        if(c == null)
+                            continue;
+                        if(c.getClass().getSimpleName().equals("Arrival")){
+                            ((Arrival)c).setLock(true);
+                        }
+                    }
                 }
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG);
+            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG);
+            Toast.makeText(context, "FileNotFoundException", Toast.LENGTH_LONG).show();
         }
     }
 
-    private Bitmap[] getBitmaps() {
-        Bitmap[] bitmaps = new Bitmap[6];
+    private void getBitmaps() {
         bitmaps[0] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.tile,null)).getBitmap();
-        bitmaps[1] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player,null)).getBitmap();
+        bitmaps[1] = bitmapsPlayer[playerNum];
         bitmaps[2] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.arrival,null)).getBitmap();
-        bitmaps[3] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.ennemi,null)).getBitmap();
-        bitmaps[4] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.tile,null)).getBitmap();
-        return bitmaps;
+        bitmaps[3] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.notarrival,null)).getBitmap();
+        bitmaps[4] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.ennemi,null)).getBitmap();
+        bitmaps[5] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.key,null)).getBitmap();
+    }
+
+    private void getBitmapsPlayer(){
+        bitmapsPlayer[0] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player1,null)).getBitmap();
+        bitmapsPlayer[1] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player2,null)).getBitmap();
+        bitmapsPlayer[2] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player3,null)).getBitmap();
+        bitmapsPlayer[3] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player4,null)).getBitmap();
+        bitmapsPlayer[4] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player5,null)).getBitmap();
+        bitmapsPlayer[5] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player6,null)).getBitmap();
     }
 
 
@@ -251,13 +273,15 @@ public class GameManager implements SensorEventListener {
 
     private void updatePlayer(Player p){
         float[] newPos = {p.getX(),p.getY()};
-        if(Math.abs(mSensorX)>0.5)
+        if(Math.abs(mSensorX)>0.3)
             newPos[0] -= mSensorX*3;
-        if (Math.abs(mSensorY)>0.5)
+        if (Math.abs(mSensorY)>0.3)
             newPos[1] += mSensorY*3;
         float[] pos;
-
+        int i = 0;
+        int del = -1;
         for (Collisionable col: tab) {
+            i++;
             if (col == null)
                 continue;
             switch (col.getClass().getSimpleName()) {
@@ -267,7 +291,9 @@ public class GameManager implements SensorEventListener {
                         newPos = pos;
                     break;
                 case "Arrival":
-                    if(p.checkArrival((Arrival) col)){
+                    if(nbKeys!=0)
+                        break;
+                    else if(p.checkArrival((Arrival) col)){
                         stopped = true;
                         endGame();
                     }
@@ -282,6 +308,14 @@ public class GameManager implements SensorEventListener {
                         checkDeaths();
                     }
                     break;
+                case "Key":
+                    pos = p.checkCollisions((Key)col,newPos);
+                    if(pos != null){
+                        nbKeys--;
+                        checkKeys();
+                        del = i-1;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -289,18 +323,33 @@ public class GameManager implements SensorEventListener {
                 break;
         }
         p.move(newPos[0],newPos[1]);
+        if(del!=-1)
+            tab[del] = null;
 
+    }
+
+    private void checkKeys() {
+        if(nbKeys==0){
+            for (Collisionable c : tab){
+                if(c == null)
+                    continue;
+                if(c.getClass().getSimpleName().equals("Arrival")){
+                    ((Arrival)c).setLock(false);
+                }
+            }
+        }
     }
 
     private void checkDeaths(){
         if(nbDeaths==5){
             level = 1;
+            lvlMin = 1;
             nbDeaths = 0;
             ga.loseGame();
         }
     }
 
-    public void endGame(){
+    private void endGame(){
         stopRunning();
         stop();
         ga.endGame();
@@ -346,16 +395,26 @@ public class GameManager implements SensorEventListener {
     }
 
     public static void nextLvl(){
+        if(level==lvlMin)
+            lvlMin++;
         level++;
     }
 
+/*
     public static void prevLvl() {
         level--;
     }
+*/
 
     public static int getLvlMax() {
         return lvlMax;
     }
 
+    public static int getLvlMin() {
+        return lvlMin;
+    }
 
+    public static void setLvlMin(int lvlMin) {
+        GameManager.lvlMin = lvlMin;
+    }
 }

@@ -1,9 +1,6 @@
 package iut.projet.hardestgame.activities;
 
 import android.app.Activity;
-import android.preference.PreferenceActivity;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -17,7 +14,7 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         final CheckBox cb = findViewById(R.id.musiqueCheckBox);
-        if(Main2Activity.isMusic())
+        if(MainActivity.isMusic())
             cb.setChecked(true);
         else
             cb.setChecked(false);
@@ -26,9 +23,9 @@ public class SettingsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(cb.isChecked())
-                    Main2Activity.setIsMusic(true);
+                    MainActivity.setIsMusic(true);
                 else
-                    Main2Activity.setIsMusic(false);
+                    MainActivity.setIsMusic(false);
             }
         });
     }

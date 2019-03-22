@@ -7,26 +7,12 @@ import android.net.Uri;
 import java.io.IOException;
 import java.io.Serializable;
 
-import iut.projet.hardestgame.activities.Main2Activity;
+import iut.projet.hardestgame.activities.MainActivity;
 
 public class SongPlayer implements Serializable {
     private MediaPlayer player;
     private int currentPosition = 0;
 
-  /*  public SongPlayer(Context context, int res) throws IOException {
-        player = new MediaPlayer();
-        Uri myUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + res);
-        player.setDataSource(context, myUri);
-        player.prepare();
-    }
-
-    public SongPlayer(String url) throws IOException {
-        player = new MediaPlayer();
-        //player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        player.setDataSource(url);
-        player.prepare();
-    }
-*/
     public SongPlayer(){
         player = new MediaPlayer();
         player.setLooping(true);
@@ -38,7 +24,7 @@ public class SongPlayer implements Serializable {
 
     public void start(){
        // player.seekTo(currentPosition);
-        if(Main2Activity.isMusic())
+        if(MainActivity.isMusic())
             player.start();
     }
 

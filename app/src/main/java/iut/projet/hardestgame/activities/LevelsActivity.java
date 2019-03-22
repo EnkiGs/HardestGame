@@ -37,7 +37,7 @@ public class LevelsActivity extends AppCompatActivity {
         table = findViewById(R.id.LevelsTable);
         buttons = new LevelButton[GameManager.getLvlMax()];
         int nbLvls = GameManager.getLvlMax();
-        int currentLvl = GameManager.getLevel();
+        int currentLvl = GameManager.getLvlMin();
         for(int i=0;i< nbLvls;i++){
             LevelButton b = new LevelButton(this,String.format("%d",i+1), i+1<=currentLvl);
             table.setColumnShrinkable(i,true);
@@ -62,7 +62,7 @@ public class LevelsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),Main2Activity.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
         super.onBackPressed();
     }
 

@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".activities.WinActivity"/>
         <activity
-            android:name=".activities.Main2Activity"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -40,9 +40,9 @@
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Main2Activity" />
+                android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.AncienneMainActivity">
            <!-- <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,7 +52,7 @@
         <activity android:name=".activities.LevelsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Main2Activity" />
+                android:value=".activities.MainActivity" />
         </activity>
 
         <meta-data
