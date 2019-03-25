@@ -8,7 +8,7 @@ import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.activities.LevelsActivity;
 
 public class LevelButton extends AppCompatButton {
-    private static int size =  350;
+    private static int size = 350;
 
     public LevelButton(final Context context, String text, boolean clickable) {
         super(context);

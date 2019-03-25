@@ -22,4 +22,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="player_choise">Choose your player</string>
+    <string name="us_image">imageView_us</string>
+    <string name="selected_player">Selected_Player</string>
+    <string name="ok_button">OKButton</string>
 </resources>

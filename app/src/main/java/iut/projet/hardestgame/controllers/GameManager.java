@@ -37,8 +37,10 @@ public class GameManager implements SensorEventListener {
 
     private static int level = 1;
     private static int lvlMin = 1;
-    private static int lvlMax = 4;
+    private static int lvlMax = 6;
     private static int nbDeaths = 0;
+    private static int playerNum = 0;
+    private static int nbPlayers = 6;
     private GameLoop gameLoop;
     private GameView gameView;
     private GameActivity ga;
@@ -56,7 +58,6 @@ public class GameManager implements SensorEventListener {
     private int nbKeys = 0;
     private Bitmap[] bitmaps;
     private Bitmap[] bitmapsPlayer;
-    private int playerNum = 0;
 
     public GameManager(GameActivity g, Context context){
         this.context = context;
@@ -68,6 +69,10 @@ public class GameManager implements SensorEventListener {
         w.getDefaultDisplay().getSize(size);
         screenWidth = size.x;
         screenHeight = size.y;
+
+
+        getBitmapsPlayer();
+        getBitmaps();
         createLevel();
         gameView = new GameView(context,tab);
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -87,8 +92,6 @@ public class GameManager implements SensorEventListener {
         gameLoop.running(true);
         stopped = false;
         gameLoop.start();
-        getBitmapsPlayer();
-        getBitmaps();
     }
 
 
@@ -189,6 +192,7 @@ public class GameManager implements SensorEventListener {
     }
 
     private void getBitmaps() {
+        bitmaps = new Bitmap[6];
         bitmaps[0] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.tile,null)).getBitmap();
         bitmaps[1] = bitmapsPlayer[playerNum];
         bitmaps[2] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.arrival,null)).getBitmap();
@@ -198,6 +202,7 @@ public class GameManager implements SensorEventListener {
     }
 
     private void getBitmapsPlayer(){
+        bitmapsPlayer = new Bitmap[nbPlayers];
         bitmapsPlayer[0] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player1,null)).getBitmap();
         bitmapsPlayer[1] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player2,null)).getBitmap();
         bitmapsPlayer[2] = ((BitmapDrawable) ResourcesCompat.getDrawable(context.getResources(),R.drawable.player3,null)).getBitmap();
@@ -341,7 +346,7 @@ public class GameManager implements SensorEventListener {
     }
 
     private void checkDeaths(){
-        if(nbDeaths==5){
+        if(nbDeaths==10){
             level = 1;
             lvlMin = 1;
             nbDeaths = 0;
@@ -416,5 +421,18 @@ public class GameManager implements SensorEventListener {
 
     public static void setLvlMin(int lvlMin) {
         GameManager.lvlMin = lvlMin;
+    }
+
+    public static int getNbPlayers() {
+        return nbPlayers;
+    }
+
+    public static int getPlayerNum() {
+        return playerNum;
+    }
+
+
+    public static void setPlayerNum(int playerNum) {
+        GameManager.playerNum = playerNum;
     }
 }

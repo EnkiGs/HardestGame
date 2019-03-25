@@ -16,6 +16,12 @@ import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.SongPlayer;
 
+/*
+Depot : - documentation
+        - code
+        - APK
+        - preuves (PDF)
+*/
 public class MainActivity extends AppCompatActivity {
 
     private static SongPlayer songPlayer = null;
@@ -113,11 +119,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showPlayers(View view){
+        Intent intent = new Intent(this, PlayerActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void startActivity(Intent intent) {
         restart = false;
         super.startActivity(intent);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void onBackPressed() {}
 
     /*
     public void startGame(View view){
