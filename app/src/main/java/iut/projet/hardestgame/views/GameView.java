@@ -11,33 +11,21 @@ import iut.projet.hardestgame.models.Collisionable;
 
 public class GameView extends View  {
 
-    private int width = 1000;
-    private int height = 1000;
-    private int screenWidth;
-    private int screenHeight;
     Paint backgroundPaint;
     Rect rect;
 
-    // Rect
-    private int margin = 0;
-    private int left = margin;
-    private int top = margin;
-    private int right;
-    private int bottom;
     Collisionable[] tabCol;
+
+    private boolean first;
 
     public GameView(Context context,Collisionable[] tabCol) {
         super(context);
 
-        screenHeight = getHeight();
-        screenWidth = getWidth();
-        right = screenWidth - margin;
-        bottom = screenHeight - margin;
         setFocusable(true);
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.WHITE);
 
-        rect = new Rect(left, top, right, bottom);
+        rect = new Rect(0,0,0,0);
         this.tabCol = tabCol;
     }
 
@@ -54,27 +42,15 @@ public class GameView extends View  {
                 player = col;
             }
             else{
-                canvas.drawBitmap(col.getBitmap(),col.getX(),col.getY(),null);
+                canvas.drawBitmap(col.getBitmap(),null,col.getRectangle(),null);
             }
         }
         if(player!=null)
-            canvas.drawBitmap(player.getBitmap(),player.getX(),player.getY(),null);
+            canvas.drawBitmap(player.getBitmap(),null,player.getRectangle(),null);
     }
 
 
     public void update() {
         postInvalidate();
-    }
-
-    public int isWidth(){return width;}
-
-    public int isHeight(){return height;}
-
-    public int getScreenWidth() {
-        return screenWidth;
-    }
-
-    public int getScreenHeight() {
-        return screenHeight;
     }
 }

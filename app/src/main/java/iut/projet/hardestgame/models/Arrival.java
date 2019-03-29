@@ -1,12 +1,13 @@
 package iut.projet.hardestgame.models;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 
 public class Arrival extends Box {
     private boolean lock = false;
     private Bitmap[] bitmaps;
-    public Arrival(float x, float y, float side, Bitmap b, Bitmap notB) {
-        super(x,y,side,side,b);
+    public Arrival(Point p, int side, Bitmap b, Bitmap notB) {
+        super(p,side,side,b);
         bitmaps = new Bitmap[]{b,notB};
     }
 

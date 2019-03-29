@@ -16,12 +16,7 @@ import iut.projet.hardestgame.R;
 import iut.projet.hardestgame.controllers.GameManager;
 import iut.projet.hardestgame.models.SongPlayer;
 
-/*
-Depot : - documentation
-        - code
-        - APK
-        - preuves (PDF)
-*/
+
 public class MainActivity extends AppCompatActivity {
 
     private static SongPlayer songPlayer = null;

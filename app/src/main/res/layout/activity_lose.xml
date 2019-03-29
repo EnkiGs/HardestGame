@@ -7,7 +7,7 @@
     tools:context=".activities.LoseActivity"
     android:background="@drawable/port_lose">
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/restart_button_custom"
         android:contentDescription="@string/next_button_win"
         android:onClick="onRestartLevels"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton3"
@@ -23,10 +23,9 @@
         app:layout_constraintHorizontal_bias="0.309"
         app:layout_constraintStart_toEndOf="@+id/imageButton3"
         app:layout_constraintTop_toTopOf="@+id/imageButton3"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/restart" />
+        app:layout_constraintVertical_bias="0.0"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,14 +35,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/menu_button_custom"
         android:contentDescription="@string/menu_button_win"
         android:onClick="onMenuClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.713"
-        app:srcCompat="@drawable/menu_button" />
+        app:layout_constraintVertical_bias="0.713" />
 
 </android.support.constraint.ConstraintLayout>

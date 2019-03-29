@@ -1,9 +1,10 @@
 package iut.projet.hardestgame.models;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 
 public class Tile extends Box {
-    public Tile(float x, float y, float side, Bitmap b) {
-        super(x,y,side,side,b);
+    public Tile(Point p, int side, Bitmap b) {
+        super(p,side,side,b);
     }
 }

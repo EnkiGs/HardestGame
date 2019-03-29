@@ -1,9 +1,10 @@
 package iut.projet.hardestgame.models;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 
 public class Key extends Box {
-    public Key(float x, float y, float width, float height, Bitmap b) {
-        super(x, y, width, height, b);
+    public Key(Point p, int width, int height, Bitmap b) {
+        super(p, width, height, b);
     }
 }

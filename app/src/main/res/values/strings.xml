@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hardest Game</string>
+    <string name="app_name">HardestGame 2.0</string>
     <string name="button_start">Start</string>
     <string name="button_levels">Levels</string>
     <string name="button_start_id">StartButton</string>
@@ -14,7 +14,6 @@
     <string name="playername">Name</string>
     <string name="ready">I\'m ready</string>
     <string name="level_1">LEVEL 1</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="go_to_app_config">Go to app config</string>
     <string name="about_us">About us</string>
     <string name="enki_garrigues">ENKI GARRIGUES</string>

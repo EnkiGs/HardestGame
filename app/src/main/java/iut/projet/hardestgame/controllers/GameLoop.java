@@ -1,7 +1,7 @@
 package iut.projet.hardestgame.controllers;
 
 public class GameLoop extends Thread {
-
+    private int FPS = 40;
     private boolean running = true;
     private GameManager gm;
 
@@ -10,36 +10,24 @@ public class GameLoop extends Thread {
     }
     @Override
     public void run() {
-/*        long startTime;
-        long elapsedTime; // durée de (update()+render())
-        long sleepCorrected; // sleeptime corrigé*/
+        long ticksPS = 1000 / FPS;
+        long startTime;
+        long sleepTime;
         try {
-            Thread.sleep(60);
+            sleep(60);
         } catch (InterruptedException ignored) {
         }
         while (this.running) {
+            startTime = System.currentTimeMillis();
             beep();
+            sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
             try {
-                Thread.sleep(30);
+                if (sleepTime > 0)
+                    sleep(sleepTime);
+                else
+                    sleep(16);
             } catch (InterruptedException ignored) {
             }
-
-            /*startTime = System.currentTimeMillis();
-            *//*this.processEvents();
-
-            elapsedTime = System.currentTimeMillis() - startTime;
-            sleepCorrected = sleepTime - elapsedTime;
-            // si jamais sleepCorrected<0 alors faire une pause de 1 ms
-            if (sleepCorrected < 0) {
-                sleepCorrected = 1;
-            }
-            try {
-                Thread.sleep(sleepCorrected > 0 ? sleepCorrected : 1);
-            } catch (InterruptedException ignored) {
-            }
-            // calculer le FSP
-            fps = (int) (1000/(System.currentTimeMillis() - startTime));
-            sleepTime = 1/fps*1000;*/
         }
     }
 

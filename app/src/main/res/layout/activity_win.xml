@@ -7,7 +7,7 @@
     tools:context=".activities.WinActivity"
     android:background="@drawable/port_back_win">
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/next_button_custom"
         android:contentDescription="@string/next_button_win"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,10 +25,9 @@
         app:layout_constraintStart_toEndOf="@+id/imageButton3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.657"
-        app:srcCompat="@drawable/next"
         android:onClick="onNextLevelClick"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,13 +37,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/menu_button_custom"
         android:contentDescription="@string/menu_button_win"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.657"
-        app:srcCompat="@drawable/menu_button"
         android:onClick="onMenuClick"/>
 </android.support.constraint.ConstraintLayout>

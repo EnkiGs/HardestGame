@@ -26,8 +26,7 @@ import iut.projet.hardestgame.activities.MainActivity;
 import iut.projet.hardestgame.models.Arrival;
 import iut.projet.hardestgame.models.Box;
 import iut.projet.hardestgame.models.Collisionable;
-import iut.projet.hardestgame.models.EnemyH;
-import iut.projet.hardestgame.models.EnemyV;
+import iut.projet.hardestgame.models.Enemy;
 import iut.projet.hardestgame.models.Key;
 import iut.projet.hardestgame.models.Player;
 import iut.projet.hardestgame.models.Tile;
@@ -53,8 +52,7 @@ public class GameManager implements SensorEventListener {
     private boolean stopped;
     private int screenWidth;
     private int screenHeight;
-    private int posDepX;
-    private int posDepY;
+    private Point pointDep;
     private int nbKeys = 0;
     private Bitmap[] bitmaps;
     private Bitmap[] bitmapsPlayer;
@@ -68,8 +66,7 @@ public class GameManager implements SensorEventListener {
         Point size = new Point();
         w.getDefaultDisplay().getSize(size);
         screenWidth = size.x;
-        screenHeight = size.y;
-
+        screenHeight = size.y - Math.round(size.y*0.2f);
 
         getBitmapsPlayer();
         getBitmaps();
@@ -127,6 +124,9 @@ public class GameManager implements SensorEventListener {
                 int nbL = Integer.parseInt(reader.readLine());
                 tab = new Collisionable[nbC*nbL];
 
+                    Collisionable.TILE_SIZE = Math.min(screenWidth/nbC,screenHeight/nbL);
+
+
                 while ((str = reader.readLine()) != null) {
                     buf.append(str);
                     buf.append("\n");
@@ -146,24 +146,23 @@ public class GameManager implements SensorEventListener {
                         Collisionable col = null;
                         switch (c){
                             case '1':
-                                col = new Tile(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[0]);
+                                col = new Tile(new Point(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i),Collisionable.TILE_SIZE, bitmaps[0]);
                                 break;
                             case '2':
-                                posDepX = departH+Collisionable.TILE_SIZE*j;
-                                posDepY = departV+Collisionable.TILE_SIZE*i;
-                                col = new Player(posDepX,posDepY,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
+                                pointDep = new Point(departH+Collisionable.TILE_SIZE*j, departV+Collisionable.TILE_SIZE*i);
+                                col = new Player(pointDep,Collisionable.TILE_SIZE-20, Collisionable.TILE_SIZE-20, bitmaps[1]);
                                 break;
                             case '3':
-                                col = new Arrival(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE, bitmaps[2], bitmaps[3]);
+                                col = new Arrival(new Point(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i),Collisionable.TILE_SIZE, bitmaps[2], bitmaps[3]);
                                 break;
                             case '4':
-                                col = new EnemyH(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4]);
+                                col = new Enemy(new Point(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i),Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4],0);
                                 break;
                             case '5':
-                                col = new EnemyV(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4]);
+                                col = new Enemy(new Point(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i),Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[4],1);
                                 break;
                             case '6':
-                                col = new Key(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i,Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[5]);
+                                col = new Key(new Point(departH+Collisionable.TILE_SIZE*j,departV+Collisionable.TILE_SIZE*i),Collisionable.TILE_SIZE,Collisionable.TILE_SIZE, bitmaps[5]);
                                 nbKeys++;
                                 break;
                             default:
@@ -231,26 +230,18 @@ public class GameManager implements SensorEventListener {
                 continue;
             if(stopped)
                 break;
-            float[] newPos;
             switch(c.getClass().getSimpleName()) {
                 case "Player":
                     updatePlayer((Player) c);
                     break;
-                case "EnemyH":
-                    newPos = new float[]{c.getX()+2*level*0.75F*((EnemyH)c).getSens(),c.getY()};
-                    newPos = updateEnemy(newPos,(Box)c);
-                    if(c.getX()==newPos[0]){
-                        ((EnemyH)c).invertSens();
-                    }
-                    ((EnemyH)c).move(newPos[0],newPos[1]);
-                    break;
-                case "EnemyV":
-                    newPos = new float[]{c.getX(),c.getY()+2*((EnemyV)c).getSens()};
-                    newPos = updateEnemy(newPos,(Box)c);
-                    if(c.getY()==newPos[1]){
-                        ((EnemyV)c).invertSens();
-                    }
-                    ((EnemyV)c).move(newPos[0],newPos[1]);
+                case "Enemy":
+                    int or = ((Enemy)c).getOrientation();
+                    Point point = c.getPoint();
+                    if(or==0)
+                        ((Enemy) c).move(new Point(c.getPoint().x+Math.round(level*((Enemy)c).getSens()),c.getPoint().y));
+                    else
+                        ((Enemy) c).move(new Point(c.getPoint().x,c.getPoint().y+Math.round(level*((Enemy)c).getSens())));
+                    updateEnemy((Enemy) c, point);
                     break;
                 default:
                     break;
@@ -258,42 +249,41 @@ public class GameManager implements SensorEventListener {
         }
     }
 
-    private float[] updateEnemy(float[] newPos, Box e) {
-        float[] pos;
+    private void updateEnemy(Enemy e, Point oldPos) {
         for (Collisionable col: tab) {
             if (col == null)
                 continue;
             switch (col.getClass().getSimpleName()) {
                 case "Tile":
-                    pos = e.checkCollisions((Tile)col,newPos);
-                    if(pos != null)
-                        newPos = pos;
+                    if(e.checkCollisions((Tile)col)) {
+                        e.move(oldPos);
+                        e.invertSens();
+                    }
                     break;
                 default:
                     break;
             }
         }
-        return newPos;
     }
 
     private void updatePlayer(Player p){
-        float[] newPos = {p.getX(),p.getY()};
+        Point point = p.getPoint();
+        int newX = point.x;
+        int newY = point.y;
         if(Math.abs(mSensorX)>0.3)
-            newPos[0] -= mSensorX*3;
+            newX = point.x-Math.round(mSensorX*3);
         if (Math.abs(mSensorY)>0.3)
-            newPos[1] += mSensorY*3;
-        float[] pos;
+            newY = point.y+Math.round(mSensorY*3);
+        p.move(new Point(newX,newY));
         int i = 0;
-        int del = -1;
+        int touched = 0;
         for (Collisionable col: tab) {
             i++;
             if (col == null)
                 continue;
-            switch (col.getClass().getSimpleName()) {
+           switch (col.getClass().getSimpleName()) {
                 case "Tile":
-                    pos = p.checkCollisions((Tile)col,newPos);
-                    if(pos != null)
-                        newPos = pos;
+                    touched = p.checkCollisions((Tile)col,point);
                     break;
                 case "Arrival":
                     if(nbKeys!=0)
@@ -303,22 +293,18 @@ public class GameManager implements SensorEventListener {
                         endGame();
                     }
                     break;
-                case "EnemyH":
-                case "EnemyV":
-                    pos = p.checkCollisions((Box)col,newPos);
-                    if(pos != null) {
-                        newPos[0] = posDepX;
-                        newPos[1] = posDepY;
+                case "Enemy":
+                    if(p.checkCollisions((Box)col)){
                         nbDeaths++;
                         checkDeaths();
+                        p.move(pointDep);
                     }
                     break;
                 case "Key":
-                    pos = p.checkCollisions((Key)col,newPos);
-                    if(pos != null){
+                    if(p.checkCollisions((Key)col)){
                         nbKeys--;
                         checkKeys();
-                        del = i-1;
+                        tab[i-1] = null;
                     }
                     break;
                 default:
@@ -326,12 +312,17 @@ public class GameManager implements SensorEventListener {
             }
             if(stopped)
                 break;
+            if(touched==1)
+                p.move(new Point(point.x,p.getPoint().y));
+            else if(touched==2)
+                p.move(new Point(p.getPoint().x,point.y));
+            else if(touched==3)
+                p.move(point);
         }
-        p.move(newPos[0],newPos[1]);
-        if(del!=-1)
-            tab[del] = null;
 
     }
+
+
 
     private void checkKeys() {
         if(nbKeys==0){

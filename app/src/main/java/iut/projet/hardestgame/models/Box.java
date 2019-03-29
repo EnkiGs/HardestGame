@@ -1,52 +1,74 @@
 package iut.projet.hardestgame.models;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 
 public class Box extends Collisionable {
-    private float width;
-    private float height;
-
+    private int width;
+    private int height;
     private boolean collisionUp = false;
     private boolean collisionDown = false;
     private boolean collisionLeft = false;
     private boolean collisionRight = false;
 
 
-    public Box(float x, float y, float width, float height, Bitmap b){
-        this.x = x;
-        this.y = y;
+    public Box(Point p, int width, int height, Bitmap b){
+        point = p;
         this.width = width;
         this.height = height;
         this.bitmap = b;
+        rectangle = new Rect(getPoint().x,getPoint().y,getPoint().x+width,getPoint().y+height);
     }
 
-    public float[] checkCollisions(Box other, float[] newPos){
-        float oldX = x;
-        float oldY = y;
+    @Override
+    public void setPoint(Point point) {
+        super.setPoint(point);
+        rectangle.set(point.x,point.y,point.x+width,point.y+height);
+    }
+    public boolean checkCollisions(Box other) {
+        return Rect.intersects(rectangle, other.getRectangle());
+    }
+
+    /*public int[] checkCollisions(Box other) {
+        int oldX = getPoint().x;
+        int oldY = getPoint().y;
         boolean test = false;
-        x = newPos[0];
+        setPoint(new Point(newPos[0],oldY));
+        if(Rect.intersects(rectangle,other.getRectangle())){
+            test = true;
+            newPos[0] = oldX;
+        }
+*//*
         checkCollisionsX(other);
         if (isCollisionLeft() || isCollisionRight()) {
             test = true;
             x = oldX;
             newPos[0] = oldX;
-        }
-        x = oldX;
-        y = newPos[1];
+        }*//*
+        setPoint(new Point(oldX,oldY));
+        //x = oldX;
+        //y = newPos[1];
+        setPoint(new Point(oldX,newPos[1]));
+        if(Rect.intersects(rectangle,other.getRectangle())){
+            test = true;
+            newPos[1] = oldY;
+        }*//*
         checkCollisionsY(other);
         if (isCollisionDown() || isCollisionUp()) {
             test = true;
             y = oldY;
             newPos[1] = oldY;
         }
-        y = oldY;
+        y = oldY;*//*
+        setPoint(new Point(oldX,oldY));
 
-        if(test)
+        if (test)
             return newPos;
         else
             return null;
-    }
-
+    }*/
+    /*
     public void checkCollisionsX(Box other){
         collisionLeft = false;
         collisionRight = false;
@@ -54,9 +76,9 @@ public class Box extends Collisionable {
                 || (other.x + other.width <= x) // trop à gauche
                 || (other.y >= y + height) // trop en bas
                 || (other.y + other.height <= y))  // trop en haut
-/*            return false;
+*//*            return false;
         else
-            return true;*/
+            return true;*//*
             return;
         if(other.x < x + width && other.x > x) {
             collisionRight = true;
@@ -74,9 +96,9 @@ public class Box extends Collisionable {
                 || (other.x + other.width <= x) // trop à gauche
                 || (other.y >= y + height) // trop en bas
                 || (other.y + other.height <= y))  // trop en haut
-/*            return false;
+*//*            return false;
         else
-            return true;*/
+            return true;*//*
             return;
         if(other.y < y + height && other.y > y) {
             collisionDown = true;
@@ -85,27 +107,8 @@ public class Box extends Collisionable {
             collisionUp = true;
         }
 
-    }
-/*
-    public boolean checkCollisions(Circle other){
-        Box boxCercle = new Box(other.x-other.getRadius(), other.y-other.getRadius(), other.getRadius()*2, other.getRadius()*2, null);
-        if (!checkCollisions(boxCercle))
-            return false;   // premier test
-        if (other.collisionPointCircle(x,y)
-                || other.collisionPointCircle(x,y+height)
-                || other.collisionPointCircle(x+width,y)
-                || other.collisionPointCircle(x+width,y+height))
-            return true;   // deuxieme test
-        if (collisionPointBox(other.x,other.y))
-            return true;   // troisieme test
-        boolean projvertical = ProjectionOnSegment(other.x,other.y,x,y,x,y+height);
-        boolean projhorizontal = ProjectionOnSegment(other.x,other.y,x,y,x+width,y);
-        if (projvertical || projhorizontal)
-            return true;   // cas E
-        return false;  // cas B
     }*/
-
-
+/*
     public boolean collisionPointBox(float PointX,float PointY)
     {
         if (PointX >= x
@@ -115,21 +118,21 @@ public class Box extends Collisionable {
             return true;
         else
             return false;
-    }
+    }*/
 
-    public float getWidth() {
+    public int getWidth() {
         return width;
     }
 
-    public void setWidth(float width) {
+    public void setWidth(int width) {
         this.width = width;
     }
 
-    public float getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public void setHeight(float height) {
+    public void setHeight(int height) {
         this.height = height;
     }
 
@@ -147,5 +150,13 @@ public class Box extends Collisionable {
 
     public boolean isCollisionRight() {
         return collisionRight;
+    }
+
+    public Rect getRectangle() {
+        return rectangle;
+    }
+
+    public void setRectangle(Rect rectangle) {
+        this.rectangle = rectangle;
     }
 }
